@@ -1,0 +1,70 @@
+package it.academy.largesystems.eventhub.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
+
+
+import javax.sql.DataSource;
+
+@Configuration
+public class SecurityConfig {
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/signup").permitAll()
+                        .requestMatchers("/api/auth/me").authenticated()
+                        .anyRequest().permitAll()
+                )
+                .httpBasic(Customizer.withDefaults()); // abilita HTTP Basic
+
+        return http.build();
+    }
+
+
+    @Bean
+    public JdbcUserDetailsManager userDetailsManager(DataSource dataSource) {
+        JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
+        // UTENTE
+        manager.setUsersByUsernameQuery("""
+                    SELECT 
+                        "email" AS username,
+                        "password",
+                        NOT "isBanned" AS enabled
+                    FROM "User"
+                    WHERE "email" = ?
+                """);
+        // RUOLO
+        manager.setAuthoritiesByUsernameQuery("""
+                    SELECT 
+                        u."email" AS username,
+                        r."name" AS authority
+                    FROM "User" u
+                    JOIN "Role" r ON u."role_id" = r."id"
+                    WHERE u."email" = ?
+                """);
+
+        return manager;
+    }
+
+}
