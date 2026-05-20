@@ -23,6 +23,7 @@ public class Role {
 
     private String description;
     private Instant createdAt;
+    private Instant updatedAt;
 
     @OneToMany(mappedBy = "role")
     private List<User> user;
@@ -30,5 +31,11 @@ public class Role {
     @PrePersist
     public void onCreate() {
         createdAt = Instant.now();
+        updatedAt = Instant.now();
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        updatedAt = Instant.now();
     }
 }

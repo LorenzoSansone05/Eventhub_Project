@@ -35,5 +35,11 @@ public class User {
     @PrePersist
     public void onCreate() {
         createdAt = Instant.now();
+        updatedAt = Instant.now();
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        updatedAt = Instant.now();
     }
 }
