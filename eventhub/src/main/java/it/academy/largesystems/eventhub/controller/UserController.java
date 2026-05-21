@@ -5,6 +5,7 @@ import it.academy.largesystems.eventhub.dto.UserPasswordUpdateRequestDTO;
 import it.academy.largesystems.eventhub.dto.UserRoleUpdateRequestDTO;
 import it.academy.largesystems.eventhub.entity.User;
 import it.academy.largesystems.eventhub.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,8 @@ public class UserController {
     @PatchMapping("/{id}/email")
     public ResponseEntity<String> updateEmail(
             @PathVariable Long id,
-            @RequestBody UserEmailUpdateRequestDTO request) {
+            @Valid @RequestBody UserEmailUpdateRequestDTO request) {
+
         userService.updateEmail(id, request.getNewEmail());
         return ResponseEntity.ok("Email aggiornata con successo.");
     }
@@ -39,7 +41,8 @@ public class UserController {
     @PatchMapping("/{id}/password")
     public ResponseEntity<String> updatePassword(
             @PathVariable Long id,
-            @RequestBody UserPasswordUpdateRequestDTO request) {
+            @Valid @RequestBody UserPasswordUpdateRequestDTO request) {
+
         userService.updatePassword(id, request.getOldPassword(), request.getNewPassword());
         return ResponseEntity.ok("Password aggiornata con successo.");
     }
@@ -53,7 +56,7 @@ public class UserController {
     @PatchMapping("/admin/{id}/role")
     public ResponseEntity<String> updateUserRole(
             @PathVariable Long id,
-            @RequestBody UserRoleUpdateRequestDTO request) {
+            @Valid @RequestBody UserRoleUpdateRequestDTO request) {
 
         userService.updateUserRole(id, request.getNewRole());
         return ResponseEntity.ok("Ruolo utente aggiornato con successo.");

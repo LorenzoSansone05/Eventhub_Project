@@ -3,6 +3,7 @@ package it.academy.largesystems.eventhub.controller;
 import it.academy.largesystems.eventhub.dto.AuthRequestDTO;
 import it.academy.largesystems.eventhub.service.LoginService;
 import it.academy.largesystems.eventhub.service.SignupService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody AuthRequestDTO req) {
+    public ResponseEntity<String> signup(@Valid @RequestBody AuthRequestDTO req) {
         signupService.signup(req.getEmail(), req.getPassword());
         return ResponseEntity.ok("Registrazione completata");
     }

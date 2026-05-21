@@ -40,6 +40,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/api/users/*/email").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/api/users/*/password").authenticated()
                         .requestMatchers("/api/users/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/venues/**").hasRole("ADMIN")
                         .anyRequest().permitAll()
                 )
                 .httpBasic(org.springframework.security.config.Customizer.withDefaults());

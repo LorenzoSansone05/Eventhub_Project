@@ -3,6 +3,7 @@ package it.academy.largesystems.eventhub.controller;
 import it.academy.largesystems.eventhub.dto.ProfileUpdateRequestDTO;
 import it.academy.largesystems.eventhub.entity.Profile;
 import it.academy.largesystems.eventhub.service.ProfileService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class ProfileController {
     @PutMapping("/{userId}/me")
     public ResponseEntity<Profile> updateMyProfile(
             @PathVariable Long userId,
-            @RequestBody ProfileUpdateRequestDTO request) {
+            @Valid @RequestBody ProfileUpdateRequestDTO request) {
 
         Profile updatedProfile = profileService.updateProfileByUserId(userId, request);
         return ResponseEntity.ok(updatedProfile);
