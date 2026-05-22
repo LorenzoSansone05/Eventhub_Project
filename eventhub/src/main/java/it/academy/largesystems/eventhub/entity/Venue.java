@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,6 +23,9 @@ public class Venue {
     private String address;
     private String city;
     private Instant createdAt;
+
+    @OneToMany(mappedBy = "venue")
+    private List<Event> events;
 
     @PrePersist
     public void onCreate() {
