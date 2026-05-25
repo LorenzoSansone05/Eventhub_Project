@@ -34,6 +34,8 @@ public class Ticket {
     @Enumerated(EnumType.STRING)
     private TicketType type;
 
+    private double price;
+
     @Enumerated(EnumType.STRING)
     private TicketStatus status;
 

@@ -11,6 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookTicketRequestDTO {
-    private Long userId; // L'utente che sta effettuando la prenotazione
-    private TicketType type; // STANDARD o VIP
+    private Long userId;
+    private TicketType type;
 }

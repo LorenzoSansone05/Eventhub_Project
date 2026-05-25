@@ -36,23 +36,26 @@ public class TicketService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new IllegalArgumentException("Evento non trovato"));
 
-        LocalDate oggi = LocalDate.now();
-        LocalTime oraCorrente = LocalTime.now();
-
-        if (event.getEventDate().isBefore(oggi) ||
-                (event.getEventDate().isEqual(oggi) && event.getStartTime().isBefore(oraCorrente))) {
-            throw new IllegalStateException("Impossibile prenotare: l'evento è già iniziato o concluso.");
+        LocalDate today = LocalDate.now();
+        LocalTime currentTime = LocalTime.now();
+        if (event.getEventDate().isBefore(today) ||
+                (event.getEventDate().isEqual(today) && event.getStartTime().isBefore(currentTime))) {
+            throw new IllegalStateException("Impossibile prenotare: l'evento è già iniziato o si è concluso.");
         }
 
         if (ticketRepository.existsByUserIdAndEventId(userId, eventId)) {
             throw new IllegalStateException("Hai già effettuato una prenotazione per questo evento. Non puoi riprenotarti.");
         }
 
-        int venueCapacity = event.getVenue().getCapacity();
-        long activeTickets = ticketRepository.countByEventIdAndStatus(eventId, TicketStatus.PRENOTATO);
+        if (event.getPriceStandard() > event.getPriceVip()) {
+            throw new IllegalStateException("Errore nei prezzi dell'evento: lo Standard costa più del VIP.");
+        }
 
-        if (activeTickets >= venueCapacity) {
-            throw new IllegalStateException("Posti esauriti nella struttura (" + event.getVenue().getName() + ") per questo evento");
+        // Calcolo dei posti disponibili in base a quanti biglietti attivi ci sono
+        int venueCapacity = event.getVenue().getCapacity();
+        long bookedTickets = ticketRepository.countByEventIdAndStatus(eventId, TicketStatus.PRENOTATO);
+        if (bookedTickets >= venueCapacity) {
+            throw new IllegalStateException("Posti esauriti nella struttura (" + event.getVenue().getName() + ") per questo evento!");
         }
 
         Ticket ticket = new Ticket();
@@ -60,6 +63,12 @@ public class TicketService {
         ticket.setEvent(event);
         ticket.setType(type);
         ticket.setStatus(TicketStatus.PRENOTATO);
+
+        if (type == TicketType.VIP) {
+            ticket.setPrice(event.getPriceVip());
+        } else {
+            ticket.setPrice(event.getPriceStandard());
+        }
 
         return ticketRepository.save(ticket);
     }

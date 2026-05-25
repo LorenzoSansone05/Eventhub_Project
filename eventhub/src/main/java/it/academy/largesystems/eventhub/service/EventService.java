@@ -58,9 +58,16 @@ public class EventService {
             throw new ValidationException("L'utente loggato non ha il ruolo di ORGANIZER");
         }
 
+        if (event.getPriceStandard() > event.getPriceVip()) {
+            throw new ValidationException("Errore di configurazione prezzi: il prezzo Standard non può superare il prezzo VIP.");
+        }
+
+        if (event.getPriceStandard() < 0 || event.getPriceVip() < 0) {
+            throw new ValidationException("Il prezzo dei biglietti non può essere negativo.");
+        }
+
         event.setOrganizer(currentUser);
 
-        // Validazione e associazione speakers in fase di creazione
         if (event.getSpeakers() != null && !event.getSpeakers().isEmpty()) {
             event.setSpeakers(validationSpeakers(event.getSpeakers()));
         }
@@ -82,11 +89,21 @@ public class EventService {
             throw new ValidationException("Non hai i permessi per modificare questo evento.");
         }
 
+        if (eventDetails.getPriceStandard() > eventDetails.getPriceVip()) {
+            throw new ValidationException("Errore di configurazione prezzi: il prezzo Standard non può superare il prezzo VIP.");
+        }
+
+        if (eventDetails.getPriceStandard() < 0 || eventDetails.getPriceVip() < 0) {
+            throw new ValidationException("Il prezzo dei biglietti non può essere negativo.");
+        }
+
         event.setName(eventDetails.getName());
         event.setEventDate(eventDetails.getEventDate());
         event.setStartTime(eventDetails.getStartTime());
         event.setEndTime(eventDetails.getEndTime());
         event.setVenue(eventDetails.getVenue());
+        event.setPriceStandard(eventDetails.getPriceStandard());
+        event.setPriceVip(eventDetails.getPriceVip());
 
         if (eventDetails.getTags() != null) {
             event.setTags(eventDetails.getTags());

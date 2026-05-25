@@ -33,6 +33,12 @@ public class Event {
     @Column(nullable = false)
     private LocalTime endTime;
 
+    @Column(nullable = false)
+    private double priceStandard;
+
+    @Column(nullable = false)
+    private double priceVip;
+
     private Instant createdAt;
     private Instant updatedAt;
 
