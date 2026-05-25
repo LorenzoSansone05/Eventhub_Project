@@ -5,6 +5,8 @@ import it.academy.largesystems.eventhub.entity.Ticket;
 import it.academy.largesystems.eventhub.entity.User;
 import it.academy.largesystems.eventhub.entity.enums.TicketStatus;
 import it.academy.largesystems.eventhub.entity.enums.TicketType;
+import it.academy.largesystems.eventhub.exception.ResourceConflictException;
+import it.academy.largesystems.eventhub.exception.ResourceNotFoundException;
 import it.academy.largesystems.eventhub.repository.EventRepository;
 import it.academy.largesystems.eventhub.repository.TicketRepository;
 import it.academy.largesystems.eventhub.repository.UserRepository;
@@ -32,30 +34,26 @@ public class TicketService {
     public Ticket createBooking(Long userId, Long eventId, TicketType type) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+                .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato"));
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new IllegalArgumentException("Evento non trovato"));
+                .orElseThrow(() -> new ResourceNotFoundException("Evento non trovato"));
 
         LocalDate today = LocalDate.now();
         LocalTime currentTime = LocalTime.now();
         if (event.getEventDate().isBefore(today) ||
                 (event.getEventDate().isEqual(today) && event.getStartTime().isBefore(currentTime))) {
-            throw new IllegalStateException("Impossibile prenotare: l'evento è già iniziato o si è concluso.");
+            throw new ResourceConflictException("Impossibile prenotare: l'evento è già iniziato o si è concluso.");
         }
 
         if (ticketRepository.existsByUserIdAndEventId(userId, eventId)) {
-            throw new IllegalStateException("Hai già effettuato una prenotazione per questo evento. Non puoi riprenotarti.");
-        }
-
-        if (event.getPriceStandard() > event.getPriceVip()) {
-            throw new IllegalStateException("Errore nei prezzi dell'evento: lo Standard costa più del VIP.");
+            throw new ResourceConflictException("Hai già effettuato una prenotazione per questo evento. Non puoi riprenotarti.");
         }
 
         // Calcolo dei posti disponibili in base a quanti biglietti attivi ci sono
         int venueCapacity = event.getVenue().getCapacity();
         long bookedTickets = ticketRepository.countByEventIdAndStatus(eventId, TicketStatus.PRENOTATO);
         if (bookedTickets >= venueCapacity) {
-            throw new IllegalStateException("Posti esauriti nella struttura (" + event.getVenue().getName() + ") per questo evento!");
+            throw new ResourceConflictException("Posti esauriti nella struttura (" + event.getVenue().getName() + ") per questo evento!");
         }
 
         Ticket ticket = new Ticket();
@@ -76,10 +74,10 @@ public class TicketService {
     @Transactional
     public Ticket deleteBooking(Long ticketId) {
         Ticket ticket = ticketRepository.findById(ticketId)
-                .orElseThrow(() -> new IllegalArgumentException("Biglietto non trovato"));
+                .orElseThrow(() -> new ResourceNotFoundException("Biglietto non trovato"));
 
         if (ticket.getStatus() == TicketStatus.ANNULLATO) {
-            throw new IllegalStateException("Questo biglietto è già stato annullato.");
+            throw new ResourceConflictException("Questo biglietto è già stato annullato.");
         }
 
         LocalDate today = LocalDate.now();
@@ -88,7 +86,7 @@ public class TicketService {
 
         if (event.getEventDate().isBefore(today) ||
                 (event.getEventDate().isEqual(today) && event.getStartTime().isBefore(time))) {
-            throw new IllegalStateException("Impossibile annullare la prenotazione: l'evento è già iniziato o concluso.");
+            throw new ResourceConflictException("Impossibile annullare la prenotazione: l'evento è già iniziato o concluso.");
         }
 
         ticket.setStatus(TicketStatus.ANNULLATO);

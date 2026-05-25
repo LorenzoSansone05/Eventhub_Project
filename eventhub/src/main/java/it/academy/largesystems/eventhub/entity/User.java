@@ -1,6 +1,7 @@
 package it.academy.largesystems.eventhub.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,10 +22,16 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "L'email è obbligatoria.")
+    @Email(message = "Fornire un indirizzo email valido.")
+    @Size(max = 100, message = "L'email non può superare i 100 caratteri.")
     @Column(nullable = false, unique = true)
     private String email;
 
+    @NotBlank(message = "La password è obbligatoria.")
+    @Size(min = 6, message = "La password deve contenere almeno 6 caratteri.")
     private String password;
+
     private Instant createdAt;
     private Instant updatedAt;
     private boolean isBanned;

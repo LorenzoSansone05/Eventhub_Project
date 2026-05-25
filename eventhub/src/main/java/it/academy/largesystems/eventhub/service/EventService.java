@@ -3,6 +3,8 @@ package it.academy.largesystems.eventhub.service;
 import it.academy.largesystems.eventhub.entity.Event;
 import it.academy.largesystems.eventhub.entity.Speaker;
 import it.academy.largesystems.eventhub.entity.User;
+import it.academy.largesystems.eventhub.exception.ForbiddenException;
+import it.academy.largesystems.eventhub.exception.ResourceNotFoundException;
 import it.academy.largesystems.eventhub.exception.ValidationException;
 import it.academy.largesystems.eventhub.repository.EventRepository;
 import it.academy.largesystems.eventhub.repository.SpeakerRepository;
@@ -48,14 +50,14 @@ public class EventService {
 
     public Event getEventById(Long id) {
         return eventRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Evento non trovato con ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Evento non trovato con ID: " + id));
     }
 
     @Transactional
     public Event createEvent(Event event) {
         User currentUser = getAuthenticatedUser();
         if (!hasRole(currentUser, "ORGANIZER")) {
-            throw new ValidationException("L'utente loggato non ha il ruolo di ORGANIZER");
+            throw new ForbiddenException("L'utente loggato non ha il ruolo di ORGANIZER");
         }
 
         if (event.getPriceStandard() > event.getPriceVip()) {
@@ -86,13 +88,14 @@ public class EventService {
                 && hasRole(currentUser, "ORGANIZER");
 
         if (!isOwner && !isAdmin) {
-            throw new ValidationException("Non hai i permessi per modificare questo evento.");
+            throw new ForbiddenException("Non hai i permessi per modificare questo evento.");
         }
 
         if (eventDetails.getPriceStandard() > eventDetails.getPriceVip()) {
             throw new ValidationException("Errore di configurazione prezzi: il prezzo Standard non può superare il prezzo VIP.");
         }
 
+        // DA RIMUOVERE
         if (eventDetails.getPriceStandard() < 0 || eventDetails.getPriceVip() < 0) {
             throw new ValidationException("Il prezzo dei biglietti non può essere negativo.");
         }
@@ -130,7 +133,7 @@ public class EventService {
         if (isOwner || isAdmin) {
             eventRepository.delete(event);
         } else {
-            throw new ValidationException("Non hai i permessi per eliminare questo evento.");
+            throw new ForbiddenException("Non hai i permessi per eliminare questo evento.");
         }
     }
 
@@ -140,11 +143,11 @@ public class EventService {
 
         for (Speaker s : speakersFromWeb) {
             if (s.getId() == null) {
-                throw new ValidationException("Impossibile creare un relatore da qui. Fornire solo ID esistenti.");
+                throw new ValidationException("Impossibile associare un relatore senza ID. Fornire solo ID esistenti.");
             }
 
             Speaker speakerDB = speakerRepository.findById(s.getId())
-                    .orElseThrow(() -> new ValidationException("Il relatore con ID " + s.getId() + " non esiste nel sistema. Operazione annullata."));
+                    .orElseThrow(() -> new ResourceNotFoundException("Il relatore con ID " + s.getId() + " non esiste nel sistema. Operazione annullata."));
 
             speakers.add(speakerDB);
         }

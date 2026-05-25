@@ -3,6 +3,7 @@ package it.academy.largesystems.eventhub.controller;
 import it.academy.largesystems.eventhub.dto.BookTicketRequestDTO;
 import it.academy.largesystems.eventhub.entity.Ticket;
 import it.academy.largesystems.eventhub.service.TicketService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,16 +19,16 @@ public class TicketController {
     @PostMapping("/events/{id}/book")
     public ResponseEntity<Ticket> createBooking(
             @PathVariable("id") Long eventId,
-            @RequestBody BookTicketRequestDTO request) {
+            @Valid @RequestBody BookTicketRequestDTO request) {
 
-        Ticket nuovoTicket = ticketService.createBooking(request.getUserId(), eventId, request.getType());
-        return ResponseEntity.status(HttpStatus.CREATED).body(nuovoTicket);
+        Ticket newTicket = ticketService.createBooking(request.getUserId(), eventId, request.getType());
+        return ResponseEntity.status(HttpStatus.CREATED).body(newTicket);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Ticket> deleteBooking(@PathVariable("id") Long ticketId) {
 
-        Ticket ticketAnnullato = ticketService.deleteBooking(ticketId);
-        return ResponseEntity.ok(ticketAnnullato);
+        Ticket deleted = ticketService.deleteBooking(ticketId);
+        return ResponseEntity.ok(deleted);
     }
 }

@@ -2,7 +2,8 @@ package it.academy.largesystems.eventhub.service;
 
 import it.academy.largesystems.eventhub.entity.Speaker;
 import it.academy.largesystems.eventhub.entity.User;
-import it.academy.largesystems.eventhub.exception.ValidationException;
+import it.academy.largesystems.eventhub.exception.ForbiddenException;
+import it.academy.largesystems.eventhub.exception.ResourceNotFoundException;
 import it.academy.largesystems.eventhub.repository.SpeakerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -40,7 +41,7 @@ public class SpeakerService {
 
     public Speaker getSpeakerById(Long id) {
         return speakerRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Speaker non trovato con ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Speaker non trovato con ID: " + id));
     }
 
     // SOLO ADMIN può creare
@@ -50,7 +51,7 @@ public class SpeakerService {
         if (hasRole(currentUser, "ADMIN")) {
             return speakerRepository.save(speaker);
         }
-        throw new ValidationException("Solo l'amministratore può censire un nuovo relatore.");
+        throw new ForbiddenException("Solo l'amministratore può censire un nuovo relatore.");
     }
 
     // SOLO ADMIN può modificare
@@ -64,7 +65,7 @@ public class SpeakerService {
             speaker.setBio(speakerDetails.getBio());
             return speakerRepository.save(speaker);
         }
-        throw new ValidationException("Solo l'amministratore può modificare i dati di un relatore.");
+        throw new ForbiddenException("Solo l'amministratore può modificare i dati di un relatore.");
     }
 
     // SOLO ADMIN può eliminare
@@ -75,7 +76,7 @@ public class SpeakerService {
             Speaker speaker = getSpeakerById(id);
             speakerRepository.delete(speaker);
         } else {
-            throw new ValidationException("Solo l'amministratore può eliminare un relatore.");
+            throw new ForbiddenException("Solo l'amministratore può eliminare un relatore.");
         }
     }
 }

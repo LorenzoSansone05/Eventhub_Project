@@ -1,6 +1,7 @@
 package it.academy.largesystems.eventhub.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,27 +22,36 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Il nome dell'evento è obbligatorio.")
+    @Size(max = 150, message = "Il nome dell'evento non può superare i 150 caratteri.")
     @Column(nullable = false)
     private String name;
 
+    @NotNull(message = "La data dell'evento è obbligatoria.")
+    @FutureOrPresent(message = "La data dell'evento non può essere nel passato.")
     @Column(nullable = false)
     private LocalDate eventDate;
 
+    @NotNull(message = "L'orario di inizio è obbligatorio.")
     @Column(nullable = false)
     private LocalTime startTime;
 
+    @NotNull(message = "L'orario di fine è obbligatorio.")
     @Column(nullable = false)
     private LocalTime endTime;
 
+    @PositiveOrZero(message = "Il prezzo Standard non può essere negativo.")
     @Column(nullable = false)
     private double priceStandard;
 
+    @PositiveOrZero(message = "Il prezzo VIP non può essere negativo.")
     @Column(nullable = false)
     private double priceVip;
 
     private Instant createdAt;
     private Instant updatedAt;
 
+    @NotNull(message = "La struttura (venue) è obbligatoria.")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "venue_id", nullable = false)
     private Venue venue;
@@ -57,7 +67,6 @@ public class Event {
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private Set<Tag> tags; // Uso set e non list per evitare duplicati
-
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

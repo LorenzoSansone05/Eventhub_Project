@@ -2,6 +2,7 @@ package it.academy.largesystems.eventhub.controller;
 
 import it.academy.largesystems.eventhub.entity.Event;
 import it.academy.largesystems.eventhub.service.EventService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,8 +28,8 @@ public class EventController {
             @RequestParam(required = false) String organizerName,
             Pageable pageable) {
 
-        Page<Event> eventiFiltrati = eventService.getEventsByFilters(date, tag, venueName, organizerName, pageable);
-        return ResponseEntity.ok(eventiFiltrati);
+        Page<Event> eventsByFilters = eventService.getEventsByFilters(date, tag, venueName, organizerName, pageable);
+        return ResponseEntity.ok(eventsByFilters);
     }
 
     @GetMapping("/{id}")
@@ -37,13 +38,13 @@ public class EventController {
     }
 
     @PostMapping
-    public ResponseEntity<Event> createEvent(@RequestBody Event event) {
+    public ResponseEntity<Event> createEvent(@Valid @RequestBody Event event) {
         Event created = eventService.createEvent(event);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Event> updateEvent(@PathVariable Long id, @RequestBody Event eventDetails) {
+    public ResponseEntity<Event> updateEvent(@PathVariable Long id, @Valid @RequestBody Event eventDetails) {
         Event updated = eventService.updateEvent(id, eventDetails);
         return ResponseEntity.ok(updated);
     }

@@ -3,6 +3,7 @@ package it.academy.largesystems.eventhub.entity;
 import it.academy.largesystems.eventhub.entity.enums.TicketStatus;
 import it.academy.largesystems.eventhub.entity.enums.TicketType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,11 +32,14 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "La tipologia di biglietto è obbligatoria.")
     @Enumerated(EnumType.STRING)
     private TicketType type;
 
+    @PositiveOrZero(message = "Il prezzo del biglietto non può essere negativo.")
     private double price;
 
+    @NotNull(message = "Lo stato del biglietto è obbligatorio.")
     @Enumerated(EnumType.STRING)
     private TicketStatus status;
 
@@ -43,10 +47,12 @@ public class Ticket {
 
     private Instant updatedAt;
 
+    @NotNull(message = "L'utente associato al biglietto è obbligatorio.")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
+    @NotNull(message = "L'evento associato al biglietto è obbligatorio.")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
     private Event event;

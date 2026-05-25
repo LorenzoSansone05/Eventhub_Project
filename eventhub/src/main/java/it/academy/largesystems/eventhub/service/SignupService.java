@@ -2,7 +2,7 @@ package it.academy.largesystems.eventhub.service;
 
 import it.academy.largesystems.eventhub.entity.Role;
 import it.academy.largesystems.eventhub.entity.User;
-import it.academy.largesystems.eventhub.exception.ValidationException;
+import it.academy.largesystems.eventhub.exception.ResourceConflictException;
 import it.academy.largesystems.eventhub.repository.RoleRepository;
 import it.academy.largesystems.eventhub.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class SignupService {
     public void signup(String email, String password) {
 
         if (userRepository.findByEmail(email).isPresent()) {
-            throw new ValidationException("Email già registrata");
+            throw new ResourceConflictException("Email già registrata");
         }
 
         Role role = roleRepository.findByName("ROLE_USER");

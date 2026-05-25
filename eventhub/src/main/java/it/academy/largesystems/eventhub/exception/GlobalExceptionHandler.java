@@ -17,4 +17,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleValidation(ValidationException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<String> handleForbidden(ForbiddenException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(ResourceConflictException.class)
+    public ResponseEntity<String> handleResourceConflict(ResourceConflictException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
 }

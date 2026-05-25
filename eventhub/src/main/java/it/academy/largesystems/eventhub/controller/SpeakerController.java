@@ -2,6 +2,7 @@ package it.academy.largesystems.eventhub.controller;
 
 import it.academy.largesystems.eventhub.entity.Speaker;
 import it.academy.largesystems.eventhub.service.SpeakerService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,13 +30,13 @@ public class SpeakerController {
     }
 
     @PostMapping
-    public ResponseEntity<Speaker> createSpeaker(@RequestBody Speaker speaker) {
+    public ResponseEntity<Speaker> createSpeaker(@Valid @RequestBody Speaker speaker) {
         Speaker createdSpeaker = speakerService.createSpeaker(speaker);
         return new ResponseEntity<>(createdSpeaker, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Speaker> updateSpeaker(@PathVariable Long id, @RequestBody Speaker speakerDetails) {
+    public ResponseEntity<Speaker> updateSpeaker(@PathVariable Long id, @Valid @RequestBody Speaker speakerDetails) {
         Speaker updatedSpeaker = speakerService.updateSpeaker(id, speakerDetails);
         return ResponseEntity.ok(updatedSpeaker);
     }

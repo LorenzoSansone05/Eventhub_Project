@@ -2,17 +2,16 @@ package it.academy.largesystems.eventhub.service;
 
 import it.academy.largesystems.eventhub.entity.Role;
 import it.academy.largesystems.eventhub.entity.User;
+import it.academy.largesystems.eventhub.exception.ResourceConflictException;
 import it.academy.largesystems.eventhub.exception.ResourceNotFoundException;
 import it.academy.largesystems.eventhub.exception.ValidationException;
 import it.academy.largesystems.eventhub.repository.RoleRepository;
 import it.academy.largesystems.eventhub.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -55,7 +54,7 @@ public class UserService {
         // Query per verificare se esiste gia un altro utente con la stessa email collegata
         userRepository.findByEmail(newEmail).ifPresent(existingUser -> {
             if (!existingUser.getId().equals(id)) {
-                throw new ValidationException("Email già in uso da un altro account.");
+                throw new ResourceConflictException("Email già in uso da un altro account.");
             }
         });
 
@@ -67,7 +66,7 @@ public class UserService {
     public void updatePassword(Long id, String oldPassword, String newPassword) {
         User user = getUserById(id);
 
-        // Confronto della vecchia password immessa da lui e quella che nopi abbiamo salvato sul db
+        // Confronto della vecchia password immessa da lui e quella che noi abbiamo salvato sul db
         // Fa il confronto anche se la password è stata cryptata, grazie al metodo matches di springSecurity
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             throw new ValidationException("La vecchia password non è corretta.");
@@ -80,7 +79,7 @@ public class UserService {
     @Transactional
     public void updateUserRole(Long id, String newRoleName) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Utente non trovato con ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato con ID: " + id));
 
         String formattedRoleName = newRoleName.toUpperCase();
 
