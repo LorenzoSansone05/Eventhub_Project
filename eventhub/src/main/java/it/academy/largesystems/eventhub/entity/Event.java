@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -50,7 +50,16 @@ public class Event {
             joinColumns = @JoinColumn(name = "event_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    private Set<Tag> tags = new HashSet<>(); // Uso set e non list per evitare duplicati
+    private Set<Tag> tags; // Uso set e non list per evitare duplicati
+
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "event_speaker",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "speaker_id")
+    )
+    private List<Speaker> speakers;
 
     @PrePersist
     public void onCreate() {
