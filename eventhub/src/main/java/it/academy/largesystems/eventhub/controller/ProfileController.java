@@ -1,7 +1,7 @@
 package it.academy.largesystems.eventhub.controller;
 
+import it.academy.largesystems.eventhub.dto.ProfileResponseDTO;
 import it.academy.largesystems.eventhub.dto.ProfileUpdateRequestDTO;
-import it.academy.largesystems.eventhub.entity.Profile;
 import it.academy.largesystems.eventhub.service.ProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,18 +15,15 @@ public class ProfileController {
 
     private final ProfileService profileService;
 
-    @GetMapping("/{userId}/me")
-    public ResponseEntity<Profile> getMyProfile(@PathVariable Long userId) {
-        Profile profile = profileService.getProfileByUserId(userId);
+    @GetMapping("/me")
+    public ResponseEntity<ProfileResponseDTO> getMyProfile() {
+        ProfileResponseDTO profile = profileService.getProfileByUserId();
         return ResponseEntity.ok(profile);
     }
 
-    @PutMapping("/{userId}/me")
-    public ResponseEntity<Profile> updateMyProfile(
-            @PathVariable Long userId,
-            @Valid @RequestBody ProfileUpdateRequestDTO request) {
-
-        Profile updatedProfile = profileService.updateProfileByUserId(userId, request);
+    @PutMapping("/me")
+    public ResponseEntity<ProfileResponseDTO> updateMyProfile(@Valid @RequestBody ProfileUpdateRequestDTO request) {
+        ProfileResponseDTO updatedProfile = profileService.updateProfileByUserId(request);
         return ResponseEntity.ok(updatedProfile);
     }
 }

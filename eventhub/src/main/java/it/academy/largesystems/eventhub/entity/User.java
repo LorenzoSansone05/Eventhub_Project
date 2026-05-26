@@ -29,19 +29,21 @@ public class User implements UserDetails {
     private String email;
 
     @NotBlank(message = "La password è obbligatoria.")
-    @Size(min = 6, message = "La password deve contenere almeno 6 caratteri.")
     private String password;
 
     private Instant createdAt;
     private Instant updatedAt;
     private boolean isBanned;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id") // FK
     private Role role;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Profile profile;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Feedback> feedbacks;
 
     @OneToMany(mappedBy = "organizer")
     private List<Event> organizedEvents;
@@ -61,31 +63,34 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        if (this.role == null) {
+            return List.of();
+        }
+        return List.of(() -> this.role.getName());
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return this.email;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return !this.isBanned;
     }
 }

@@ -3,6 +3,7 @@ package it.academy.largesystems.eventhub.service;
 import it.academy.largesystems.eventhub.entity.Role;
 import it.academy.largesystems.eventhub.entity.User;
 import it.academy.largesystems.eventhub.exception.ResourceConflictException;
+import it.academy.largesystems.eventhub.exception.ResourceNotFoundException;
 import it.academy.largesystems.eventhub.repository.RoleRepository;
 import it.academy.largesystems.eventhub.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,10 @@ public class SignupService {
         }
 
         Role role = roleRepository.findByName("ROLE_USER");
+
+        if (role == null) {
+            throw new ResourceNotFoundException("Configurazione di sistema incompleta: Ruolo ROLE_USER non trovato.");
+        }
 
         User user = new User();
         user.setEmail(email);

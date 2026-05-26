@@ -1,15 +1,18 @@
 package it.academy.largesystems.eventhub.service;
 
+import it.academy.largesystems.eventhub.config.SecurityUtil;
+import it.academy.largesystems.eventhub.dto.BookTicketResponseDTO;
 import it.academy.largesystems.eventhub.entity.Event;
 import it.academy.largesystems.eventhub.entity.Ticket;
 import it.academy.largesystems.eventhub.entity.User;
 import it.academy.largesystems.eventhub.entity.enums.TicketStatus;
 import it.academy.largesystems.eventhub.entity.enums.TicketType;
+import it.academy.largesystems.eventhub.exception.ForbiddenException;
 import it.academy.largesystems.eventhub.exception.ResourceConflictException;
 import it.academy.largesystems.eventhub.exception.ResourceNotFoundException;
 import it.academy.largesystems.eventhub.repository.EventRepository;
 import it.academy.largesystems.eventhub.repository.TicketRepository;
-import it.academy.largesystems.eventhub.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,24 +20,21 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Service
+@RequiredArgsConstructor
 public class TicketService {
 
     private final TicketRepository ticketRepository;
     private final EventRepository eventRepository;
-    private final UserRepository userRepository;
+    private final SecurityUtil securityUtil;
 
-    public TicketService(TicketRepository ticketRepository, EventRepository eventRepository, UserRepository userRepository) {
-        this.ticketRepository = ticketRepository;
-        this.eventRepository = eventRepository;
-        this.userRepository = userRepository;
+    private User getAuthenticatedUser() {
+        return securityUtil.getAuthenticatedUser();
     }
 
-
     @Transactional
-    public Ticket createBooking(Long userId, Long eventId, TicketType type) {
+    public BookTicketResponseDTO createBooking(Long eventId, TicketType type) {
+        User user = getAuthenticatedUser();
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato"));
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new ResourceNotFoundException("Evento non trovato"));
 
@@ -45,13 +45,13 @@ public class TicketService {
             throw new ResourceConflictException("Impossibile prenotare: l'evento è già iniziato o si è concluso.");
         }
 
-        if (ticketRepository.existsByUserIdAndEventId(userId, eventId)) {
+        if (ticketRepository.existsByUserIdAndEventId(user.getId(), eventId)) {
             throw new ResourceConflictException("Hai già effettuato una prenotazione per questo evento. Non puoi riprenotarti.");
         }
 
-        // Calcolo dei posti disponibili in base a quanti biglietti attivi ci sono
         int venueCapacity = event.getVenue().getCapacity();
         long bookedTickets = ticketRepository.countByEventIdAndStatus(eventId, TicketStatus.PRENOTATO);
+
         if (bookedTickets >= venueCapacity) {
             throw new ResourceConflictException("Posti esauriti nella struttura (" + event.getVenue().getName() + ") per questo evento!");
         }
@@ -61,20 +61,28 @@ public class TicketService {
         ticket.setEvent(event);
         ticket.setType(type);
         ticket.setStatus(TicketStatus.PRENOTATO);
+        ticket.setPrice(type == TicketType.VIP ? event.getPriceVip() : event.getPriceStandard());
 
-        if (type == TicketType.VIP) {
-            ticket.setPrice(event.getPriceVip());
-        } else {
-            ticket.setPrice(event.getPriceStandard());
-        }
+        Ticket createdTicket = ticketRepository.save(ticket);
 
-        return ticketRepository.save(ticket);
+        return new BookTicketResponseDTO(
+                createdTicket.getId(), event.getId(), event.getName(), event.getEventDate(),
+                user.getId(), user.getEmail(), createdTicket.getType(), createdTicket.getStatus(), createdTicket.getPrice()
+        );
     }
 
     @Transactional
-    public Ticket deleteBooking(Long ticketId) {
+    public BookTicketResponseDTO deleteBooking(Long ticketId) {
+        User currentUser = getAuthenticatedUser();
+
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new ResourceNotFoundException("Biglietto non trovato"));
+
+        boolean isOwner = ticket.getUser() != null && ticket.getUser().getId().equals(currentUser.getId());
+
+        if (!isOwner) {
+            throw new ForbiddenException("Non hai i permessi per annullare questo biglietto, non ti appartiene.");
+        }
 
         if (ticket.getStatus() == TicketStatus.ANNULLATO) {
             throw new ResourceConflictException("Questo biglietto è già stato annullato.");
@@ -90,7 +98,12 @@ public class TicketService {
         }
 
         ticket.setStatus(TicketStatus.ANNULLATO);
+        Ticket ticketUpdated = ticketRepository.save(ticket);
 
-        return ticketRepository.save(ticket);
+
+        return new BookTicketResponseDTO(
+                ticketUpdated.getId(), event.getId(), event.getName(), event.getEventDate(),
+                ticket.getUser().getId(), ticket.getUser().getEmail(), ticketUpdated.getType(), ticketUpdated.getStatus(), ticketUpdated.getPrice()
+        );
     }
 }

@@ -2,8 +2,8 @@ package it.academy.largesystems.eventhub.controller;
 
 import it.academy.largesystems.eventhub.dto.UserEmailUpdateRequestDTO;
 import it.academy.largesystems.eventhub.dto.UserPasswordUpdateRequestDTO;
+import it.academy.largesystems.eventhub.dto.UserResponseDTO;
 import it.academy.largesystems.eventhub.dto.UserRoleUpdateRequestDTO;
-import it.academy.largesystems.eventhub.entity.User;
 import it.academy.largesystems.eventhub.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,41 +19,39 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/admin/getAll")
-    public ResponseEntity<List<User>> getAllUsers() {
+    // ADMIN
+    @GetMapping
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @GetMapping("/admin/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    // ADMIN
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    @PatchMapping("/{id}/email")
-    public ResponseEntity<String> updateEmail(
-            @PathVariable Long id,
-            @Valid @RequestBody UserEmailUpdateRequestDTO request) {
-
-        userService.updateEmail(id, request.getNewEmail());
+    @PatchMapping("/me/email")
+    public ResponseEntity<String> updateEmail(@Valid @RequestBody UserEmailUpdateRequestDTO request) {
+        userService.updateEmail(request.getNewEmail());
         return ResponseEntity.ok("Email aggiornata con successo.");
     }
 
-    @PatchMapping("/{id}/password")
-    public ResponseEntity<String> updatePassword(
-            @PathVariable Long id,
-            @Valid @RequestBody UserPasswordUpdateRequestDTO request) {
-
-        userService.updatePassword(id, request.getOldPassword(), request.getNewPassword());
+    @PatchMapping("/me/password")
+    public ResponseEntity<String> updatePassword(@Valid @RequestBody UserPasswordUpdateRequestDTO request) {
+        userService.updatePassword(request.getOldPassword(), request.getNewPassword());
         return ResponseEntity.ok("Password aggiornata con successo.");
     }
 
-    @DeleteMapping("/admin/{id}")
+    // ADMIN
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/admin/{id}/role")
+    // ADMIN
+    @PatchMapping("/{id}/role")
     public ResponseEntity<String> updateUserRole(
             @PathVariable Long id,
             @Valid @RequestBody UserRoleUpdateRequestDTO request) {

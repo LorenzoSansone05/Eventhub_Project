@@ -13,9 +13,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class BookTicketRequestDTO {
 
-    @NotNull(message = "L'ID dell'utente è obbligatorio per effettuare una prenotazione.")
-    private Long userId;
-
     @NotNull(message = "La tipologia di biglietto (STANDARD o VIP) è obbligatoria.")
     private TicketType type;
 }

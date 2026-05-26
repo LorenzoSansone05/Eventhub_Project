@@ -1,6 +1,7 @@
 package it.academy.largesystems.eventhub.controller;
 
 import it.academy.largesystems.eventhub.dto.AuthRequestDTO;
+import it.academy.largesystems.eventhub.dto.AuthResponseDTO;
 import it.academy.largesystems.eventhub.service.LoginService;
 import it.academy.largesystems.eventhub.service.SignupService;
 import jakarta.validation.Valid;
@@ -27,16 +28,10 @@ public class AuthController {
         return ResponseEntity.ok("Registrazione completata");
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<String> login(@RequestBody AuthRequestDTO req) {
-//        loginService.login(req.getEmail(), req.getPassword());
-//        return ResponseEntity.ok("Login effettuato");
-//    }
-
-    // TEST LOGIN
-    @GetMapping("/me")
-    public String loginTest(Authentication auth) {
-        return "Ciao " + auth.getName();
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody AuthRequestDTO req) {
+        String token = loginService.login(req.getEmail(), req.getPassword());
+        return ResponseEntity.ok(new AuthResponseDTO(token));
     }
 
 }

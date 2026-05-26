@@ -1,6 +1,7 @@
 package it.academy.largesystems.eventhub.controller;
 
-import it.academy.largesystems.eventhub.entity.Speaker;
+import it.academy.largesystems.eventhub.dto.SpeakerRequestDTO;
+import it.academy.largesystems.eventhub.dto.SpeakerResponseDTO;
 import it.academy.largesystems.eventhub.service.SpeakerService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -18,27 +19,25 @@ public class SpeakerController {
     private final SpeakerService speakerService;
 
     @GetMapping
-    public ResponseEntity<List<Speaker>> getAllSpeakers() {
-        List<Speaker> speakers = speakerService.getAllSpeakers();
-        return ResponseEntity.ok(speakers);
+    public ResponseEntity<List<SpeakerResponseDTO>> getAllSpeakers() {
+        return ResponseEntity.ok(speakerService.getAllSpeakers());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Speaker> getSpeakerById(@PathVariable Long id) {
-        Speaker speaker = speakerService.getSpeakerById(id);
-        return ResponseEntity.ok(speaker);
+    public ResponseEntity<SpeakerResponseDTO> getSpeakerById(@PathVariable Long id) {
+        return ResponseEntity.ok(speakerService.getSpeakerById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Speaker> createSpeaker(@Valid @RequestBody Speaker speaker) {
-        Speaker createdSpeaker = speakerService.createSpeaker(speaker);
-        return new ResponseEntity<>(createdSpeaker, HttpStatus.CREATED);
+    public ResponseEntity<SpeakerResponseDTO> createSpeaker(@Valid @RequestBody SpeakerRequestDTO speakerDTO) {
+        SpeakerResponseDTO created = speakerService.createSpeaker(speakerDTO);
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Speaker> updateSpeaker(@PathVariable Long id, @Valid @RequestBody Speaker speakerDetails) {
-        Speaker updatedSpeaker = speakerService.updateSpeaker(id, speakerDetails);
-        return ResponseEntity.ok(updatedSpeaker);
+    public ResponseEntity<SpeakerResponseDTO> updateSpeaker(@PathVariable Long id, @Valid @RequestBody SpeakerRequestDTO speakerDetails) {
+        SpeakerResponseDTO updated = speakerService.updateSpeaker(id, speakerDetails);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")

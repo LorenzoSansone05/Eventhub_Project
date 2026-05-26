@@ -1,5 +1,7 @@
 package it.academy.largesystems.eventhub.service;
 
+import it.academy.largesystems.eventhub.config.SecurityUtil;
+import it.academy.largesystems.eventhub.dto.UserResponseDTO;
 import it.academy.largesystems.eventhub.entity.Role;
 import it.academy.largesystems.eventhub.entity.User;
 import it.academy.largesystems.eventhub.exception.ResourceConflictException;
@@ -12,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,39 +24,83 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final SecurityUtil securityUtil;
+
+    private User getAuthenticatedUser() {
+        return securityUtil.getAuthenticatedUser();
+    }
 
     // Uso @Transactional anche se non effettuo operazioni che modificano il DB, per non far chiudere la sessione in caso dovessi fare un caricamento dei dati in modalita LAZY
 
     @Transactional(readOnly = true)
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponseDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+
+        List<UserResponseDTO> responseList = new ArrayList<>();
+
+        for (User user : users) {
+            UserResponseDTO dto = new UserResponseDTO();
+            dto.setId(user.getId());
+            dto.setEmail(user.getEmail());
+            dto.setBanned(user.isBanned());
+
+            if (user.getRole() != null) {
+                dto.setRoleName(user.getRole().getName());
+            }
+
+            responseList.add(dto);
+        }
+
+        return responseList;
     }
 
     @Transactional(readOnly = true)
-    public User getUserById(Long id) {
-        return userRepository.findById(id)
+    public UserResponseDTO getUserById(Long id) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato con id: " + id));
+
+        UserResponseDTO dto = new UserResponseDTO();
+        dto.setId(user.getId());
+        dto.setEmail(user.getEmail());
+        dto.setBanned(user.isBanned());
+
+        if (user.getRole() != null) {
+            dto.setRoleName(user.getRole().getName());
+        }
+
+        return dto;
     }
 
-    @Transactional(readOnly = true)
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato con email: " + email));
-    }
+//    @Transactional(readOnly = true)
+//    public UserResponseDTO getUserByEmail(String email) {
+//        User user = userRepository.findByEmail(email)
+//                .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato con email: " + email));
+//
+//        UserResponseDTO dto = new UserResponseDTO();
+//        dto.setId(user.getId());
+//        dto.setEmail(user.getEmail());
+//        dto.setBanned(user.isBanned());
+//
+//        if (user.getRole() != null) {
+//            dto.setRoleName(user.getRole().getName());
+//        }
+//
+//        return dto;
+//    }
 
     @Transactional
     public void deleteUser(Long id) {
-        User user = getUserById(id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato con id: " + id));
         userRepository.delete(user);
     }
 
     @Transactional
-    public void updateEmail(Long id, String newEmail) {
-        User user = getUserById(id);
+    public void updateEmail(String newEmail) {
+        User user = getAuthenticatedUser();
 
-        // Query per verificare se esiste gia un altro utente con la stessa email collegata
         userRepository.findByEmail(newEmail).ifPresent(existingUser -> {
-            if (!existingUser.getId().equals(id)) {
+            if (!existingUser.getId().equals(user.getId())) {
                 throw new ResourceConflictException("Email già in uso da un altro account.");
             }
         });
@@ -63,11 +110,9 @@ public class UserService {
     }
 
     @Transactional
-    public void updatePassword(Long id, String oldPassword, String newPassword) {
-        User user = getUserById(id);
+    public void updatePassword(String oldPassword, String newPassword) {
+        User user = getAuthenticatedUser();
 
-        // Confronto della vecchia password immessa da lui e quella che noi abbiamo salvato sul db
-        // Fa il confronto anche se la password è stata cryptata, grazie al metodo matches di springSecurity
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             throw new ValidationException("La vecchia password non è corretta.");
         }
@@ -84,7 +129,7 @@ public class UserService {
         String formattedRoleName = newRoleName.toUpperCase();
 
         if (!formattedRoleName.equals("ORGANIZER") && !formattedRoleName.equals("USER")) {
-            throw new ValidationException("Ruolo non valido. È possibile assegnare solo 'ORGANIZER' o 'USER'.");
+            throw new ResourceConflictException("Ruolo non valido. È possibile assegnare solo 'ORGANIZER' o 'USER'.");
         }
 
         Role targetRole = roleRepository.findByName(formattedRoleName);

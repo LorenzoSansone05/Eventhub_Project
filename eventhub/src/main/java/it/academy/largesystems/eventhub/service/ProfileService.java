@@ -1,7 +1,10 @@
 package it.academy.largesystems.eventhub.service;
 
+import it.academy.largesystems.eventhub.config.SecurityUtil;
+import it.academy.largesystems.eventhub.dto.ProfileResponseDTO;
 import it.academy.largesystems.eventhub.dto.ProfileUpdateRequestDTO;
 import it.academy.largesystems.eventhub.entity.Profile;
+import it.academy.largesystems.eventhub.entity.User;
 import it.academy.largesystems.eventhub.exception.ResourceNotFoundException;
 import it.academy.largesystems.eventhub.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,16 +16,35 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProfileService {
 
     private final ProfileRepository profileRepository;
+    private final SecurityUtil securityUtil;
 
     @Transactional(readOnly = true)
-    public Profile getProfileByUserId(Long userId) {
-        return profileRepository.findByUserId(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Profilo non trovato per l'utente con ID: " + userId));
+    public ProfileResponseDTO getProfileByUserId() {
+        User currentUser = securityUtil.getAuthenticatedUser();
+
+        Profile profile = profileRepository.findByUserId(currentUser.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Profilo non trovato per l'utente corrente."));
+
+        ProfileResponseDTO dto = new ProfileResponseDTO();
+        dto.setId(profile.getId());
+        dto.setName(profile.getName());
+        dto.setSurname(profile.getSurname());
+        dto.setBirthDate(profile.getBirth_date());
+        dto.setCity(profile.getCity());
+        dto.setDescription(profile.getDescription());
+        if (profile.getUser() != null) {
+            dto.setUserId(profile.getUser().getId());
+            dto.setEmail(profile.getUser().getEmail());
+        }
+        return dto;
     }
 
     @Transactional
-    public Profile updateProfileByUserId(Long userId, ProfileUpdateRequestDTO request) {
-        Profile profile = getProfileByUserId(userId);
+    public ProfileResponseDTO updateProfileByUserId(ProfileUpdateRequestDTO request) {
+        User currentUser = securityUtil.getAuthenticatedUser();
+
+        Profile profile = profileRepository.findByUserId(currentUser.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Profilo non trovato per l'utente corrente."));
 
         profile.setName(request.getName());
         profile.setSurname(request.getSurname());
@@ -30,7 +52,19 @@ public class ProfileService {
         profile.setCity(request.getCity());
         profile.setDescription(request.getDescription());
 
-        return profileRepository.save(profile);
-    }
+        Profile updatedProfile = profileRepository.save(profile);
 
+        ProfileResponseDTO dto = new ProfileResponseDTO();
+        dto.setId(profile.getId());
+        dto.setName(profile.getName());
+        dto.setSurname(profile.getSurname());
+        dto.setBirthDate(profile.getBirth_date());
+        dto.setCity(profile.getCity());
+        dto.setDescription(profile.getDescription());
+        if (profile.getUser() != null) {
+            dto.setUserId(profile.getUser().getId());
+            dto.setEmail(profile.getUser().getEmail());
+        }
+        return dto;
+    }
 }
