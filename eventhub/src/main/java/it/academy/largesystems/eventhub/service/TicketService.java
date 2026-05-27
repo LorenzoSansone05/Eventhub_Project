@@ -27,13 +27,9 @@ public class TicketService {
     private final EventRepository eventRepository;
     private final SecurityUtil securityUtil;
 
-    private User getAuthenticatedUser() {
-        return securityUtil.getAuthenticatedUser();
-    }
-
     @Transactional
     public BookTicketResponseDTO createBooking(Long eventId, TicketType type) {
-        User user = getAuthenticatedUser();
+        User user = securityUtil.getAuthenticatedUser();
 
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new ResourceNotFoundException("Evento non trovato"));
@@ -72,8 +68,8 @@ public class TicketService {
     }
 
     @Transactional
-    public BookTicketResponseDTO deleteBooking(Long ticketId) {
-        User currentUser = getAuthenticatedUser();
+    public void deleteBooking(Long ticketId) {
+        User currentUser = securityUtil.getAuthenticatedUser();
 
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new ResourceNotFoundException("Biglietto non trovato"));
@@ -99,11 +95,5 @@ public class TicketService {
 
         ticket.setStatus(TicketStatus.ANNULLATO);
         Ticket ticketUpdated = ticketRepository.save(ticket);
-
-
-        return new BookTicketResponseDTO(
-                ticketUpdated.getId(), event.getId(), event.getName(), event.getEventDate(),
-                ticket.getUser().getId(), ticket.getUser().getEmail(), ticketUpdated.getType(), ticketUpdated.getStatus(), ticketUpdated.getPrice()
-        );
     }
 }

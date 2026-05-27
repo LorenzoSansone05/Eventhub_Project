@@ -22,10 +22,6 @@ public class VenueService {
     private final VenueRepository venueRepository;
     private final SecurityUtil securityUtil;
 
-    private User getAuthenticatedUser() {
-        return securityUtil.getAuthenticatedUser();
-    }
-
     private boolean hasRole(User user, String roleName) {
         if (user == null || user.isBanned()) {
             return false;
@@ -35,7 +31,7 @@ public class VenueService {
 
     @Transactional
     public VenueResponseDTO createVenue(VenueRequestDTO venueRequest) {
-        User currentUser = getAuthenticatedUser();
+        User currentUser = securityUtil.getAuthenticatedUser();
         if (!hasRole(currentUser, "ADMIN")) {
             throw new ForbiddenException("Solo l'amministratore può registrare una nuova struttura.");
         }
@@ -72,7 +68,7 @@ public class VenueService {
 
     @Transactional
     public VenueResponseDTO updateVenue(Long id, VenueRequestDTO venueDetails) {
-        User currentUser = getAuthenticatedUser();
+        User currentUser = securityUtil.getAuthenticatedUser();
         if (!hasRole(currentUser, "ADMIN")) {
             throw new ForbiddenException("Solo l'amministratore può modificare i dati di una struttura.");
         }
@@ -92,7 +88,7 @@ public class VenueService {
 
     @Transactional
     public void deleteVenue(Long id) {
-        User currentUser = getAuthenticatedUser();
+        User currentUser = securityUtil.getAuthenticatedUser();
         if (!hasRole(currentUser, "ADMIN")) {
             throw new ForbiddenException("Solo l'amministratore può eliminare una struttura.");
         }

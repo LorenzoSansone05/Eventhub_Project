@@ -51,7 +51,7 @@ public class SpeakerService {
     @Transactional
     public SpeakerResponseDTO createSpeaker(SpeakerRequestDTO dto) {
         User currentUser = securityUtil.getAuthenticatedUser();
-        if (!hasRole(currentUser, "ADMIN")) {
+        if (!hasRole(currentUser, "ROLE_ADMIN")) {
             throw new ForbiddenException("Solo l'amministratore può censire un nuovo relatore.");
         }
 
@@ -67,7 +67,7 @@ public class SpeakerService {
     @Transactional
     public SpeakerResponseDTO updateSpeaker(Long id, SpeakerRequestDTO dto) {
         User currentUser = securityUtil.getAuthenticatedUser();
-        if (!hasRole(currentUser, "ADMIN")) {
+        if (!hasRole(currentUser, "ROLE_ADMIN")) {
             throw new ForbiddenException("Solo l'amministratore può modificare i dati di un relatore.");
         }
 
@@ -85,7 +85,7 @@ public class SpeakerService {
     @Transactional
     public void deleteSpeaker(Long id) {
         User currentUser = securityUtil.getAuthenticatedUser();
-        if (!hasRole(currentUser, "ADMIN")) {
+        if (!hasRole(currentUser, "ROLE_ADMIN")) {
             throw new ForbiddenException("Solo l'amministratore può eliminare un relatore.");
         }
 

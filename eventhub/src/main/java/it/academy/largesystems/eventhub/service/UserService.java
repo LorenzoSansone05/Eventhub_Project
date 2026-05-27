@@ -26,10 +26,6 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final SecurityUtil securityUtil;
 
-    private User getAuthenticatedUser() {
-        return securityUtil.getAuthenticatedUser();
-    }
-
     // Uso @Transactional anche se non effettuo operazioni che modificano il DB, per non far chiudere la sessione in caso dovessi fare un caricamento dei dati in modalita LAZY
 
     @Transactional(readOnly = true)
@@ -71,22 +67,22 @@ public class UserService {
         return dto;
     }
 
-//    @Transactional(readOnly = true)
-//    public UserResponseDTO getUserByEmail(String email) {
-//        User user = userRepository.findByEmail(email)
-//                .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato con email: " + email));
-//
-//        UserResponseDTO dto = new UserResponseDTO();
-//        dto.setId(user.getId());
-//        dto.setEmail(user.getEmail());
-//        dto.setBanned(user.isBanned());
-//
-//        if (user.getRole() != null) {
-//            dto.setRoleName(user.getRole().getName());
-//        }
-//
-//        return dto;
-//    }
+    @Transactional(readOnly = true)
+    public UserResponseDTO getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato con email: " + email));
+
+        UserResponseDTO dto = new UserResponseDTO();
+        dto.setId(user.getId());
+        dto.setEmail(user.getEmail());
+        dto.setBanned(user.isBanned());
+
+        if (user.getRole() != null) {
+            dto.setRoleName(user.getRole().getName());
+        }
+
+        return dto;
+    }
 
     @Transactional
     public void deleteUser(Long id) {
@@ -97,7 +93,7 @@ public class UserService {
 
     @Transactional
     public void updateEmail(String newEmail) {
-        User user = getAuthenticatedUser();
+        User user = securityUtil.getAuthenticatedUser();
 
         userRepository.findByEmail(newEmail).ifPresent(existingUser -> {
             if (!existingUser.getId().equals(user.getId())) {
@@ -111,7 +107,7 @@ public class UserService {
 
     @Transactional
     public void updatePassword(String oldPassword, String newPassword) {
-        User user = getAuthenticatedUser();
+        User user = securityUtil.getAuthenticatedUser();
 
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             throw new ValidationException("La vecchia password non è corretta.");
@@ -128,7 +124,7 @@ public class UserService {
 
         String formattedRoleName = newRoleName.toUpperCase();
 
-        if (!formattedRoleName.equals("ORGANIZER") && !formattedRoleName.equals("USER")) {
+        if (!formattedRoleName.equals("ROLE_ORGANIZER") && !formattedRoleName.equals("ROLE_USER")) {
             throw new ResourceConflictException("Ruolo non valido. È possibile assegnare solo 'ORGANIZER' o 'USER'.");
         }
 

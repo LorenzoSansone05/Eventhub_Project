@@ -76,7 +76,7 @@ public class FeedbackService {
         Feedback feedback = feedbackRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Feedback non trovato con ID: " + id));
 
-        boolean isAdmin = currentUser.getRole() != null && "ADMIN".equalsIgnoreCase(currentUser.getRole().getName());
+        boolean isAdmin = currentUser.getRole() != null && "ROLE_ADMIN".equalsIgnoreCase(currentUser.getRole().getName());
 
         if (!isAdmin) {
             throw new ForbiddenException("Non hai i permessi per eliminare questo feedback.");

@@ -32,10 +32,6 @@ public class EventService {
     private final TagRepository tagRepository;
     private final SecurityUtil securityUtil;
 
-    private User getAuthenticatedUser() {
-        return securityUtil.getAuthenticatedUser();
-    }
-
     private boolean hasRole(User user, String roleName) {
         if (user == null || user.isBanned()) {
             return false;
@@ -174,8 +170,8 @@ public class EventService {
 
     @Transactional
     public EventResponseDTO createEvent(EventCreateRequestDTO dto) {
-        User currentUser = getAuthenticatedUser();
-        if (!hasRole(currentUser, "ORGANIZER")) {
+        User currentUser = securityUtil.getAuthenticatedUser();
+        if (!hasRole(currentUser, "ROLE_ORGANIZER")) {
             throw new ForbiddenException("L'utente loggato non ha il ruolo di ORGANIZER");
         }
 
@@ -211,7 +207,7 @@ public class EventService {
 
     @Transactional
     public EventResponseDTO updateEvent(Long id, EventCreateRequestDTO dto) {
-        User currentUser = getAuthenticatedUser();
+        User currentUser = securityUtil.getAuthenticatedUser();
 
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Evento non trovato con ID: " + id));
@@ -253,14 +249,14 @@ public class EventService {
 
     @Transactional
     public void deleteEvent(Long id) {
-        User currentUser = getAuthenticatedUser();
+        User currentUser = securityUtil.getAuthenticatedUser();
 
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Evento non trovato con ID: " + id));
 
         boolean isOwner = event.getOrganizer() != null
                 && event.getOrganizer().getId().equals(currentUser.getId())
-                && hasRole(currentUser, "ORGANIZER");
+                && hasRole(currentUser, "ROLE_ORGANIZER");
 
         if (!isOwner) {
             throw new ForbiddenException("Non hai i permessi per eliminare questo evento.");
