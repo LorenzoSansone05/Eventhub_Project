@@ -1,5 +1,6 @@
 package it.academy.largesystems.eventhub.service;
 
+import it.academy.largesystems.eventhub.entity.Profile;
 import it.academy.largesystems.eventhub.entity.Role;
 import it.academy.largesystems.eventhub.entity.User;
 import it.academy.largesystems.eventhub.exception.ResourceConflictException;
@@ -43,6 +44,11 @@ public class SignupService {
         user.setPassword(passwordEncoder.encode(password));
         user.setRole(role);
         user.setBanned(false);
+
+        // CREAZIONE PROFILO VUOTO
+        Profile profile = new Profile();
+        profile.setUser(user); // SALVATAGGIO PER FK NEL DB
+        user.setProfile(profile); // SALVATAGGIO IN MEMORIA (cascade)
 
         userRepository.save(user);
     }

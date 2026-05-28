@@ -21,6 +21,7 @@ public class FeedbackController {
 
     private final FeedbackService feedbackService;
 
+    // USER
     @PostMapping
     @Operation(
             summary = "Inserisce un nuovo feedback (Richiede ruolo USER)",
@@ -37,6 +38,7 @@ public class FeedbackController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Feedback inserito con successo.");
     }
 
+    // ADMIN
     @PutMapping("/{id}")
     @Operation(
             summary = "Modifica un feedback esistente (Richiede ruolo ADMIN)",
@@ -56,6 +58,7 @@ public class FeedbackController {
         return ResponseEntity.ok("Feedback aggiornato con successo.");
     }
 
+    // ADMIN
     @DeleteMapping("/{id}")
     @Operation(
             summary = "Elimina un feedback (Richiede ruolo ADMIN)",

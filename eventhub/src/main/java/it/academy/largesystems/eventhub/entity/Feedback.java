@@ -20,7 +20,7 @@ import java.time.Instant;
         // Vincolo UNIQUE tra user_id e event_id per evitare feedback duplicati
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name = "uc_user_event",
+                        name = "uc_user_event_feedback",
                         columnNames = {"user_id", "event_id"}
                 )
         }

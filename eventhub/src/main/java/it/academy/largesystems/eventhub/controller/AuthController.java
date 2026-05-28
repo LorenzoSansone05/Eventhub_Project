@@ -25,6 +25,7 @@ public class AuthController {
         this.loginService = loginService;
     }
 
+    // TUTTI
     @PostMapping("/signup")
     @Operation(summary = "Registra un nuovo utente", description = "Crea un account utente standard (ROLE_USER).")
     @ApiResponses(value = {
@@ -38,6 +39,7 @@ public class AuthController {
         return ResponseEntity.ok("Registrazione completata");
     }
 
+    // TUTTI
     @PostMapping("/login")
     @Operation(summary = "Effettua il login", description = "Verifica le credenziali")
     @ApiResponses(value = {

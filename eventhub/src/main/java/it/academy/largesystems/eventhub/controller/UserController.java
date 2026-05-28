@@ -1,9 +1,7 @@
 package it.academy.largesystems.eventhub.controller;
 
-import it.academy.largesystems.eventhub.dto.UserEmailUpdateRequestDTO;
-import it.academy.largesystems.eventhub.dto.UserPasswordUpdateRequestDTO;
-import it.academy.largesystems.eventhub.dto.UserResponseDTO;
-import it.academy.largesystems.eventhub.dto.UserRoleUpdateRequestDTO;
+import io.swagger.v3.oas.annotations.media.Schema;
+import it.academy.largesystems.eventhub.dto.*;
 import it.academy.largesystems.eventhub.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,6 +24,7 @@ public class UserController {
 
     private final UserService userService;
 
+    // ADMIN
     @GetMapping
     @Operation(summary = "Recupera tutti gli utenti", description = "Restituisce la lista completa di tutti gli utenti registrati. Richiede privilegi di ADMIN.")
     @ApiResponse(responseCode = "200", description = "Lista recuperata con successo")
@@ -33,6 +32,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
+    // ADMIN
     @GetMapping("/{id}")
     @Operation(summary = "Recupera un utente tramite ID", description = "Restituisce i dettagli di un singolo utente tramite il suo ID univoco. Richiede privilegi di ADMIN.")
     @ApiResponses(value = {
@@ -44,6 +44,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
+    // ADMIN
     @GetMapping("/by-email/{email}")
     @Operation(
             summary = "Recupera un utente tramite email",
@@ -65,25 +66,26 @@ public class UserController {
     @PatchMapping("/me/email")
     @Operation(summary = "Aggiorna l'email dell'utente corrente", description = "Permette all'utente loggato di modificare il proprio indirizzo email.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Email aggiornata con successo", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "200", description = "Email aggiornata con successo",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserEmailUpdateResponseDTO.class))),
             @ApiResponse(responseCode = "400", description = "Dati di input non validi", content = @Content)
     })
-    public ResponseEntity<String> updateEmail(@Valid @RequestBody UserEmailUpdateRequestDTO request) {
-        userService.updateEmail(request.getNewEmail());
-        return ResponseEntity.ok("Email aggiornata con successo.");
+    public ResponseEntity<UserEmailUpdateResponseDTO> updateEmail(@Valid @RequestBody UserEmailUpdateRequestDTO request) {
+        return ResponseEntity.ok().body(userService.updateEmail(request.getNewEmail()));
     }
 
     @PatchMapping("/me/password")
     @Operation(summary = "Aggiorna la password dell'utente corrente", description = "Permette all'utente loggato di modificare la propria password di accesso.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Password aggiornata con successo", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "200", description = "Password aggiornata con successo",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserPasswordUpdateResponseDTO.class))),
             @ApiResponse(responseCode = "400", description = "Vecchia password errata o nuova password non valida", content = @Content)
     })
-    public ResponseEntity<String> updatePassword(@Valid @RequestBody UserPasswordUpdateRequestDTO request) {
-        userService.updatePassword(request.getOldPassword(), request.getNewPassword());
-        return ResponseEntity.ok("Password aggiornata con successo.");
+    public ResponseEntity<UserPasswordUpdateResponseDTO> updatePassword(@Valid @RequestBody UserPasswordUpdateRequestDTO request) {
+        return ResponseEntity.ok().body(userService.updatePassword(request.getOldPassword(), request.getNewPassword()));
     }
 
+    // ADMIN
     @DeleteMapping("/{id}")
     @Operation(summary = "Elimina un utente", description = "Rimuove permanentemente un utente dal sistema. Richiede privilegi di ADMIN.")
     @ApiResponses(value = {
@@ -96,6 +98,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    // ADMIN
     @PatchMapping("/{id}/role")
     @Operation(summary = "Aggiorna il ruolo di un utente", description = "Permette di modificare il ruolo di un utente specifico. Richiede privilegi di ADMIN.")
     @ApiResponses(value = {

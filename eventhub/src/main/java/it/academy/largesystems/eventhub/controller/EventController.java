@@ -27,6 +27,7 @@ public class EventController {
 
     private final EventService eventService;
 
+    // TUTTI
     @GetMapping
     @Operation(summary = "Recupera eventi filtrati e paginati", description = "Restituisce una pagina di eventi in base ai filtri applicati.")
     @ApiResponse(responseCode = "200", description = "Elenco recuperato con successo")
@@ -40,6 +41,7 @@ public class EventController {
         return ResponseEntity.ok(eventsByFilters);
     }
 
+    // ADMIN
     @GetMapping("/{id}")
     @Operation(summary = "Recupera un evento per ID", description = "Mostra i dettagli completi dell'evento, inclusi i feedback aggregati.")
     @ApiResponses(value = {
@@ -50,6 +52,7 @@ public class EventController {
         return ResponseEntity.ok(eventService.getEventById(id));
     }
 
+    // ORGANIZER
     @PostMapping
     @Operation(summary = "Crea un nuovo evento (Richiede ruolo ORGANIZER)", description = "Salva un nuovo evento")
     @ApiResponses(value = {
@@ -62,6 +65,7 @@ public class EventController {
         return new ResponseEntity<>(eventService.createEvent(event), HttpStatus.CREATED);
     }
 
+    // ORGANIZER
     @PutMapping("/{id}")
     @Operation(summary = "Modifica un evento esistente (Richiede ruolo ORGANIZER)", description = "Aggiorna i dati dell'evento identificato dall'ID.")
     @ApiResponses(value = {
@@ -74,6 +78,7 @@ public class EventController {
         return ResponseEntity.ok(eventService.updateEvent(id, eventDetails));
     }
 
+    // ORGANIZER
     @DeleteMapping("/{id}")
     @Operation(summary = "Elimina un evento (Richiede ruolo ORGANIZER)", description = "Rimuove l'evento")
     @ApiResponses(value = {
@@ -86,6 +91,7 @@ public class EventController {
         return ResponseEntity.noContent().build();
     }
 
+    // TUTTI
     @GetMapping("/{id}/rating")
     @Operation(summary = "Recupera la media dei feedback dell'evento", description = "Restituisce un riepilogo stringa con la media matematica delle recensioni lasciate dagli utenti.")
     @ApiResponses(value = {

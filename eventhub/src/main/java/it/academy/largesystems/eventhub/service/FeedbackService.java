@@ -33,8 +33,8 @@ public class FeedbackService {
         Event event = eventRepository.findById(request.getEventId())
                 .orElseThrow(() -> new ResourceNotFoundException("Evento non trovato con ID: " + request.getEventId()));
 
-        LocalDateTime dataOraFineEvento = LocalDateTime.of(event.getEventDate(), event.getEndTime());
-        if (LocalDateTime.now().isBefore(dataOraFineEvento)) {
+        LocalDateTime endDataAndTimeOfEvent = LocalDateTime.of(event.getEventDate(), event.getEndTime());
+        if (LocalDateTime.now().isBefore(endDataAndTimeOfEvent)) {
             throw new ValidationException("Non puoi lasciare un feedback prima che l'evento sia terminato.");
         }
 
@@ -54,14 +54,8 @@ public class FeedbackService {
 
     @Transactional
     public void updateFeedback(Long id, FeedbackRequestDTO request) {
-        User currentUser = securityUtil.getAuthenticatedUser();
-
         Feedback feedback = feedbackRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Feedback non trovato con ID: " + id));
-
-        if (!feedback.getUser().getId().equals(currentUser.getId())) {
-            throw new ForbiddenException("Non hai i permessi per modificare questo feedback.");
-        }
 
         feedback.setRating(request.getRating());
         feedback.setFeedbackText(request.getFeedbackText());
@@ -71,16 +65,8 @@ public class FeedbackService {
 
     @Transactional
     public void deleteFeedback(Long id) {
-        User currentUser = securityUtil.getAuthenticatedUser();
-
         Feedback feedback = feedbackRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Feedback non trovato con ID: " + id));
-
-        boolean isAdmin = currentUser.getRole() != null && "ROLE_ADMIN".equalsIgnoreCase(currentUser.getRole().getName());
-
-        if (!isAdmin) {
-            throw new ForbiddenException("Non hai i permessi per eliminare questo feedback.");
-        }
 
         feedbackRepository.delete(feedback);
     }

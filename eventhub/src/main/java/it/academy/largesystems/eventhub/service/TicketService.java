@@ -94,6 +94,6 @@ public class TicketService {
         }
 
         ticket.setStatus(TicketStatus.ANNULLATO);
-        Ticket ticketUpdated = ticketRepository.save(ticket);
+        ticketRepository.save(ticket);
     }
 }

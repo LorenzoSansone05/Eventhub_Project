@@ -32,13 +32,6 @@ public class EventService {
     private final TagRepository tagRepository;
     private final SecurityUtil securityUtil;
 
-    private boolean hasRole(User user, String roleName) {
-        if (user == null || user.isBanned()) {
-            return false;
-        }
-        return user.getRole() != null && roleName.equalsIgnoreCase(user.getRole().getName());
-    }
-
     @Transactional(readOnly = true)
     public Page<EventResponseDTO> getEventsByFilters(LocalDate date, String tag, String venueName, String organizerName, Pageable pageable) {
         Page<Event> eventPage = eventRepository.findByFilters(date, tag, venueName, organizerName, pageable);
@@ -86,15 +79,11 @@ public class EventService {
             if (event.getFeedbacks() != null) {
                 List<String> feedbackStrings = new ArrayList<>();
                 for (Feedback f : event.getFeedbacks()) {
-
                     if (f.getUser() == null) {
                         throw new ResourceNotFoundException("Integrità dati violata: Trovato un feedback (ID: " + f.getId() + ") senza un utente associato.");
                     }
-
                     String userEmail = f.getUser().getEmail();
-                    String commento = (f.getFeedbackText() != null && !f.getFeedbackText().isBlank())
-                            ? " - " + f.getFeedbackText()
-                            : "";
+                    String commento = (f.getFeedbackText() != null && !f.getFeedbackText().isBlank()) ? " - " + f.getFeedbackText() : "";
                     feedbackStrings.add(f.getRating() + "/5" + commento + " (" + userEmail + ")");
                 }
                 dto.setFeedbacks(feedbackStrings);
@@ -151,15 +140,11 @@ public class EventService {
         if (event.getFeedbacks() != null) {
             List<String> feedbackStrings = new ArrayList<>();
             for (Feedback f : event.getFeedbacks()) {
-
                 if (f.getUser() == null) {
                     throw new ResourceNotFoundException("Integrità dati violata: Trovato un feedback (ID: " + f.getId() + ") senza un utente associato.");
                 }
-
                 String userEmail = f.getUser().getEmail();
-                String commento = (f.getFeedbackText() != null && !f.getFeedbackText().isBlank())
-                        ? " - " + f.getFeedbackText()
-                        : "";
+                String commento = (f.getFeedbackText() != null && !f.getFeedbackText().isBlank()) ? " - " + f.getFeedbackText() : "";
                 feedbackStrings.add(f.getRating() + "/5" + commento + " (" + userEmail + ")");
             }
             dto.setFeedbacks(feedbackStrings);
@@ -171,16 +156,13 @@ public class EventService {
     @Transactional
     public EventResponseDTO createEvent(EventCreateRequestDTO dto) {
         User currentUser = securityUtil.getAuthenticatedUser();
-        if (!hasRole(currentUser, "ROLE_ORGANIZER")) {
-            throw new ForbiddenException("L'utente loggato non ha il ruolo di ORGANIZER");
-        }
 
         if (dto.getPriceStandard() > dto.getPriceVip()) {
             throw new ValidationException("Errore di configurazione prezzi: il prezzo Standard non può superare il prezzo VIP.");
         }
 
         Venue venue = venueRepository.findById(dto.getVenueId())
-                .orElseThrow(() -> new ResourceNotFoundException("Struttura non trovata con ID: " + dto.getVenueId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Struttura non trouvata con ID: " + dto.getVenueId()));
 
         Event event = new Event();
         event.setName(dto.getName());
@@ -202,7 +184,48 @@ public class EventService {
         }
 
         Event savedEvent = eventRepository.save(event);
-        return getEventById(savedEvent.getId()); // Riutilizziamo il tuo mapper per restituire il DTO pulito
+
+
+        EventResponseDTO responseDto = new EventResponseDTO();
+        responseDto.setId(savedEvent.getId());
+        responseDto.setName(savedEvent.getName());
+        responseDto.setEventDate(savedEvent.getEventDate());
+        responseDto.setStartTime(savedEvent.getStartTime());
+        responseDto.setEndTime(savedEvent.getEndTime());
+        responseDto.setPriceStandard(savedEvent.getPriceStandard());
+        responseDto.setPriceVip(savedEvent.getPriceVip());
+
+        if (savedEvent.getVenue() != null) {
+            responseDto.setVenueId(savedEvent.getVenue().getId());
+            responseDto.setVenueName(savedEvent.getVenue().getName());
+            responseDto.setVenueCity(savedEvent.getVenue().getCity());
+            responseDto.setVenueAddress(savedEvent.getVenue().getAddress());
+        }
+
+        if (savedEvent.getOrganizer() != null) {
+            responseDto.setOrganizerId(savedEvent.getOrganizer().getId());
+            responseDto.setOrganizerEmail(savedEvent.getOrganizer().getEmail());
+        }
+
+        if (savedEvent.getTags() != null) {
+            Set<String> tagNames = new HashSet<>();
+            for (Tag t : savedEvent.getTags()) {
+                tagNames.add(t.getName());
+            }
+            responseDto.setTags(tagNames);
+        }
+
+        if (savedEvent.getSpeakers() != null) {
+            List<String> speakerNames = new ArrayList<>();
+            for (Speaker s : savedEvent.getSpeakers()) {
+                speakerNames.add(s.getName() + " " + s.getSurname());
+            }
+            responseDto.setSpeakerNames(speakerNames);
+        }
+
+        responseDto.setFeedbacks(new ArrayList<>());
+
+        return responseDto;
     }
 
     @Transactional
@@ -244,7 +267,59 @@ public class EventService {
         }
 
         Event savedEvent = eventRepository.save(event);
-        return getEventById(savedEvent.getId());
+
+        EventResponseDTO responseDto = new EventResponseDTO();
+
+        responseDto.setId(savedEvent.getId());
+        responseDto.setName(savedEvent.getName());
+        responseDto.setEventDate(savedEvent.getEventDate());
+        responseDto.setStartTime(savedEvent.getStartTime());
+        responseDto.setEndTime(savedEvent.getEndTime());
+        responseDto.setPriceStandard(savedEvent.getPriceStandard());
+        responseDto.setPriceVip(savedEvent.getPriceVip());
+
+        if (savedEvent.getVenue() != null) {
+            responseDto.setVenueId(savedEvent.getVenue().getId());
+            responseDto.setVenueName(savedEvent.getVenue().getName());
+            responseDto.setVenueCity(savedEvent.getVenue().getCity());
+            responseDto.setVenueAddress(savedEvent.getVenue().getAddress());
+        }
+
+        if (savedEvent.getOrganizer() != null) {
+            responseDto.setOrganizerId(savedEvent.getOrganizer().getId());
+            responseDto.setOrganizerEmail(savedEvent.getOrganizer().getEmail());
+        }
+
+        if (savedEvent.getTags() != null) {
+            Set<String> tagNames = new HashSet<>();
+            for (Tag t : savedEvent.getTags()) {
+                tagNames.add(t.getName());
+            }
+            responseDto.setTags(tagNames);
+        }
+
+        if (savedEvent.getSpeakers() != null) {
+            List<String> speakerNames = new ArrayList<>();
+            for (Speaker s : savedEvent.getSpeakers()) {
+                speakerNames.add(s.getName() + " " + s.getSurname());
+            }
+            responseDto.setSpeakerNames(speakerNames);
+        }
+
+        if (savedEvent.getFeedbacks() != null) {
+            List<String> feedbackStrings = new ArrayList<>();
+            for (Feedback f : savedEvent.getFeedbacks()) {
+                if (f.getUser() == null) {
+                    throw new ResourceNotFoundException("Integrità dati violata: Trovato un feedback (ID: " + f.getId() + ") senza un utente associato.");
+                }
+                String userEmail = f.getUser().getEmail();
+                String commento = (f.getFeedbackText() != null && !f.getFeedbackText().isBlank()) ? " - " + f.getFeedbackText() : "";
+                feedbackStrings.add(f.getRating() + "/5" + commento + " (" + userEmail + ")");
+            }
+            responseDto.setFeedbacks(feedbackStrings);
+        }
+
+        return responseDto;
     }
 
     @Transactional
@@ -255,8 +330,7 @@ public class EventService {
                 .orElseThrow(() -> new ResourceNotFoundException("Evento non trovato con ID: " + id));
 
         boolean isOwner = event.getOrganizer() != null
-                && event.getOrganizer().getId().equals(currentUser.getId())
-                && hasRole(currentUser, "ROLE_ORGANIZER");
+                && event.getOrganizer().getId().equals(currentUser.getId());
 
         if (!isOwner) {
             throw new ForbiddenException("Non hai i permessi per eliminare questo evento.");
@@ -283,22 +357,23 @@ public class EventService {
             return "0.0/5 (0 recensioni)";
         }
 
-        double sommaVoti = 0;
+        double sumReviews = 0;
         int totalReviews = event.getFeedbacks().size();
 
         for (Feedback f : event.getFeedbacks()) {
             if (f.getUser() == null) {
                 throw new ResourceNotFoundException("Integrità dati violata: Trovato un feedback senza utente associato.");
             }
-            sommaVoti += f.getRating();
+            sumReviews += f.getRating();
         }
 
-        double media = sommaVoti / totalReviews;
+        double media = sumReviews / totalReviews;
         String mediaFormatted = String.format("%.1f", media);
 
         return mediaFormatted + "/5 basato su " + totalReviews + " recensioni.";
     }
 
+    // EFFETTUA TANTE QUERY QUANTI SONO GLI ID INVIATI NELLA RICHIESTA
     private List<Speaker> validationSpeakersById(List<Long> speakerIds) {
         List<Speaker> speakers = new ArrayList<>();
         for (Long id : speakerIds) {

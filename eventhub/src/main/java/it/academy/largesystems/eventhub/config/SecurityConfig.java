@@ -40,20 +40,46 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/signup").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/profiles/*/me").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/api/profiles/*/me").authenticated()
-                        .requestMatchers(HttpMethod.PATCH, "/api/users/*/email").authenticated()
-                        .requestMatchers(HttpMethod.PATCH, "/api/users/*/password").authenticated()
-                        .requestMatchers("/api/users/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/venues/**").hasRole("ADMIN")
-                        .anyRequest().permitAll()
+                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
+
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/events").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/events/{id}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/events/*/rating").permitAll()
+
+                        .requestMatchers("/api/profiles/me").authenticated()
+                        .requestMatchers("/api/users/me/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/tags").authenticated()
+
+                        .requestMatchers(HttpMethod.POST, "/api/feedbacks").hasRole("USER")
+                        .requestMatchers("/api/tickets/**").hasRole("USER")
+
+                        .requestMatchers(HttpMethod.POST, "/api/events").hasRole("ORGANIZER")
+                        .requestMatchers(HttpMethod.PUT, "/api/events/*").hasRole("ORGANIZER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/events/*").hasRole("ORGANIZER")
+
+                        .requestMatchers(HttpMethod.GET, "/api/speakers").hasAnyRole("ORGANIZER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/venues").hasAnyRole("ORGANIZER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/venues/*").hasAnyRole("ORGANIZER", "ADMIN")
+
+                        .requestMatchers(HttpMethod.PUT, "/api/feedbacks/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/feedbacks/*").hasRole("ADMIN")
+
+                        .requestMatchers("/api/speakers/**").hasRole("ADMIN")
+                        .requestMatchers("/api/tags/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/venues").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/venues/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/venues/*").hasRole("ADMIN")
+
+                        .requestMatchers("/api/users/by-email/*").hasRole("ADMIN")
+                        .requestMatchers("/api/users/**").hasRole("ADMIN")
+
+                        .anyRequest().authenticated()
                 )
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

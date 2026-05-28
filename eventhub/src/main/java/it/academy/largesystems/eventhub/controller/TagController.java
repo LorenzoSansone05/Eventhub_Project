@@ -24,6 +24,7 @@ public class TagController {
 
     private final TagService tagService;
 
+    // ADMIN
     @PostMapping
     @Operation(
             summary = "Crea un nuovo tag (Richiede ruolo ADMIN)",
@@ -38,6 +39,7 @@ public class TagController {
         return new ResponseEntity<>(tagService.createTag(request), HttpStatus.CREATED);
     }
 
+    // USER, ORGANIZER
     @GetMapping
     @Operation(
             summary = "Recupera tutti i tag disponibili (Accessibile a USER e ORGANIZER)",
@@ -48,6 +50,7 @@ public class TagController {
         return ResponseEntity.ok(tagService.getAllTags());
     }
 
+    // ADMIN
     @PutMapping("/{id}")
     @Operation(
             summary = "Aggiorna un tag esistente (Richiede ruolo ADMIN)",
@@ -65,6 +68,7 @@ public class TagController {
         return ResponseEntity.ok(tagService.updateTag(id, request));
     }
 
+    // ADMIN
     @DeleteMapping("/{id}")
     @Operation(
             summary = "Elimina un tag (Richiede ruolo ADMIN)",

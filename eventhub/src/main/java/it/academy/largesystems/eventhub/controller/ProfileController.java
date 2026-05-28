@@ -20,6 +20,7 @@ public class ProfileController {
 
     private final ProfileService profileService;
 
+    // TUTTI
     @GetMapping("/me")
     @Operation(
             summary = "Recupera il profilo personale",
@@ -35,6 +36,7 @@ public class ProfileController {
         return ResponseEntity.ok(profile);
     }
 
+    // TUTTI
     @PutMapping("/me")
     @Operation(
             summary = "Aggiorna il profilo personale",

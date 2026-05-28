@@ -25,6 +25,7 @@ public class VenueController {
 
     private final VenueService venueService;
 
+    // ADMIN
     @PostMapping
     @Operation(summary = "Crea una nuova location", description = "Registra una nuova location nel sistema con i dettagli relativi a capacità e indirizzo.")
     @ApiResponses(value = {
@@ -35,6 +36,7 @@ public class VenueController {
         return new ResponseEntity<>(venueService.createVenue(venue), HttpStatus.CREATED);
     }
 
+    // ORGANIZER, ADMIN
     @GetMapping
     @Operation(summary = "Recupera tutte le location", description = "Restituisce la lista completa di tutte le location registrate.")
     @ApiResponse(responseCode = "200", description = "Lista delle location recuperata con successo")
@@ -42,6 +44,7 @@ public class VenueController {
         return ResponseEntity.ok(venueService.getAllVenues());
     }
 
+    // ADMIN
     @GetMapping("/{id}")
     @Operation(summary = "Recupera una location tramite ID", description = "Restituisce i dettagli di una singola location specificando il suo ID univoco.")
     @ApiResponses(value = {
@@ -53,6 +56,7 @@ public class VenueController {
         return ResponseEntity.ok(venueService.getVenueById(id));
     }
 
+    // ADMIN
     @PutMapping("/{id}")
     @Operation(summary = "Aggiorna una location esistente", description = "Modifica integralmente i dati di una location esistente tramite il suo ID.")
     @ApiResponses(value = {
@@ -66,6 +70,7 @@ public class VenueController {
         return ResponseEntity.ok(venueService.updateVenue(id, venueDetails));
     }
 
+    // ADMIN
     @DeleteMapping("/{id}")
     @Operation(summary = "Elimina una location", description = "Rimuove permanentemente una location dal sistema tramite il suo ID.")
     @ApiResponses(value = {

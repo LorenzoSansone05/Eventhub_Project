@@ -21,7 +21,7 @@ import java.time.Instant;
         // Vincolo UNIQUE tra user_id e event_id per evitare prenotazioni duplicate
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name = "uc_user_event",
+                        name = "uc_user_event_ticket",
                         columnNames = {"user_id", "event_id"}
                 )
         }

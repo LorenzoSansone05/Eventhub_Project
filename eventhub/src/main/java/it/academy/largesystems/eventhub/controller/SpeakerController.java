@@ -24,6 +24,7 @@ public class SpeakerController {
 
     private final SpeakerService speakerService;
 
+    // ORGANIZER, ADMIN
     @GetMapping
     @Operation(summary = "Recupera tutti i relatori", description = "Restituisce la lista completa di tutti gli speaker censiti a sistema.")
     @ApiResponse(responseCode = "200", description = "Lista recuperata con successo")
@@ -31,6 +32,7 @@ public class SpeakerController {
         return ResponseEntity.ok(speakerService.getAllSpeakers());
     }
 
+    // ADMIN
     @GetMapping("/{id}")
     @Operation(summary = "Recupera speaker per ID", description = "Restituisce i dettagli di un singolo relatore tramite il suo identificativo univoco.")
     @ApiResponses(value = {
@@ -42,6 +44,7 @@ public class SpeakerController {
         return ResponseEntity.ok(speakerService.getSpeakerById(id));
     }
 
+    // ADMIN
     @PostMapping
     @Operation(summary = "Crea un nuovo relatore", description = "Registra un nuovo speaker nel database rendendolo disponibile per i futuri eventi.")
     @ApiResponses(value = {
@@ -53,6 +56,7 @@ public class SpeakerController {
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
+    // ADMIN
     @PutMapping("/{id}")
     @Operation(summary = "Aggiorna un relatore esistente", description = "Consente di modificare l'anagrafica o la biografia di uno speaker specifico.")
     @ApiResponses(value = {
@@ -67,6 +71,7 @@ public class SpeakerController {
         return ResponseEntity.ok(updated);
     }
 
+    // ADMIN
     @DeleteMapping("/{id}")
     @Operation(summary = "Elimina un relatore", description = "Rimuove in modo permanente uno speaker dal sistema.")
     @ApiResponses(value = {

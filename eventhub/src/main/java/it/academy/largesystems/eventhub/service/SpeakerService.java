@@ -5,7 +5,6 @@ import it.academy.largesystems.eventhub.dto.SpeakerRequestDTO;
 import it.academy.largesystems.eventhub.dto.SpeakerResponseDTO;
 import it.academy.largesystems.eventhub.entity.Speaker;
 import it.academy.largesystems.eventhub.entity.User;
-import it.academy.largesystems.eventhub.exception.ForbiddenException;
 import it.academy.largesystems.eventhub.exception.ResourceNotFoundException;
 import it.academy.largesystems.eventhub.repository.SpeakerRepository;
 import lombok.AllArgsConstructor;
@@ -20,14 +19,6 @@ import java.util.List;
 public class SpeakerService {
 
     private final SpeakerRepository speakerRepository;
-    private final SecurityUtil securityUtil;
-
-    private boolean hasRole(User user, String roleName) {
-        if (user == null || user.isBanned()) {
-            return false;
-        }
-        return user.getRole() != null && roleName.equalsIgnoreCase(user.getRole().getName());
-    }
 
     @Transactional(readOnly = true)
     public List<SpeakerResponseDTO> getAllSpeakers() {
@@ -50,10 +41,6 @@ public class SpeakerService {
 
     @Transactional
     public SpeakerResponseDTO createSpeaker(SpeakerRequestDTO dto) {
-        User currentUser = securityUtil.getAuthenticatedUser();
-        if (!hasRole(currentUser, "ROLE_ADMIN")) {
-            throw new ForbiddenException("Solo l'amministratore può censire un nuovo relatore.");
-        }
 
         Speaker speaker = new Speaker();
         speaker.setName(dto.getName());
@@ -66,10 +53,6 @@ public class SpeakerService {
 
     @Transactional
     public SpeakerResponseDTO updateSpeaker(Long id, SpeakerRequestDTO dto) {
-        User currentUser = securityUtil.getAuthenticatedUser();
-        if (!hasRole(currentUser, "ROLE_ADMIN")) {
-            throw new ForbiddenException("Solo l'amministratore può modificare i dati di un relatore.");
-        }
 
         Speaker speaker = speakerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Speaker non trovato con ID: " + id));
@@ -84,10 +67,6 @@ public class SpeakerService {
 
     @Transactional
     public void deleteSpeaker(Long id) {
-        User currentUser = securityUtil.getAuthenticatedUser();
-        if (!hasRole(currentUser, "ROLE_ADMIN")) {
-            throw new ForbiddenException("Solo l'amministratore può eliminare un relatore.");
-        }
 
         Speaker speaker = speakerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Speaker non trovato con ID: " + id));

@@ -22,6 +22,7 @@ public class TicketController {
 
     private final TicketService ticketService;
 
+    // USER
     @PostMapping("/events/{id}/book")
     @Operation(
             summary = "Prenota un biglietto per un evento (Richiede ruolo USER)",
@@ -41,6 +42,7 @@ public class TicketController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newTicket);
     }
 
+    // USER
     @DeleteMapping("/{id}")
     @Operation(
             summary = "Disdici una prenotazione / Elimina biglietto",
