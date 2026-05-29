@@ -3,6 +3,7 @@ package it.academy.largesystems.eventhub.service;
 import it.academy.largesystems.eventhub.config.SecurityUtil;
 import it.academy.largesystems.eventhub.dto.SpeakerRequestDTO;
 import it.academy.largesystems.eventhub.dto.SpeakerResponseDTO;
+import it.academy.largesystems.eventhub.entity.Event;
 import it.academy.largesystems.eventhub.entity.Speaker;
 import it.academy.largesystems.eventhub.entity.User;
 import it.academy.largesystems.eventhub.exception.ResourceNotFoundException;
@@ -70,6 +71,10 @@ public class SpeakerService {
 
         Speaker speaker = speakerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Speaker non trovato con ID: " + id));
+
+        for (Event event : speaker.getEvents()) {
+            event.getSpeakers().remove(speaker);
+        }
 
         speakerRepository.delete(speaker);
     }

@@ -35,11 +35,19 @@ public class Speaker {
 
     private Instant createdAt;
 
+    private Instant updatedAt;
+
     @ManyToMany(mappedBy = "speakers", fetch = FetchType.LAZY)
     private List<Event> events;
 
     @PrePersist
     public void onCreate() {
         createdAt = Instant.now();
+        updatedAt = Instant.now();
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        updatedAt = Instant.now();
     }
 }

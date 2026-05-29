@@ -12,29 +12,58 @@ import java.time.LocalDate;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
+
     @Query(value = """
-        SELECT DISTINCT e FROM Event e 
-        LEFT JOIN FETCH e.speakers 
-        LEFT JOIN FETCH e.tags t 
-        LEFT JOIN e.venue v
+        SELECT e FROM Event e 
+        LEFT JOIN e.venue v 
         LEFT JOIN e.organizer o
-        WHERE (:date IS NULL OR e.eventDate = :date)
-          AND (:tagName IS NULL OR LOWER(t.name) LIKE LOWER(CONCAT('%', :tagName, '%')))
-          AND (:venueName IS NULL OR LOWER(v.name) LIKE LOWER(CONCAT('%', :venueName, '%')))
-          AND (:organizerName IS NULL OR LOWER(o.email) LIKE LOWER(CONCAT('%', :organizerName, '%')))
+        WHERE e.eventDate = :date
+          AND (v.name ILIKE %:venueName%)
+          AND (o.email ILIKE %:organizerName%)
+          AND (:tagName = '' OR EXISTS (
+                SELECT t FROM e.tags t WHERE t.name ILIKE %:tagName%
+              ))
     """,
             countQuery = """
-        SELECT COUNT(DISTINCT e) FROM Event e 
-        LEFT JOIN e.tags t
-        LEFT JOIN e.venue v
+        SELECT COUNT(e) FROM Event e 
+        LEFT JOIN e.venue v 
         LEFT JOIN e.organizer o
-        WHERE (:date IS NULL OR e.eventDate = :date)
-          AND (:tagName IS NULL OR LOWER(t.name) LIKE LOWER(CONCAT('%', :tagName, '%')))
-          AND (:venueName IS NULL OR LOWER(v.name) LIKE LOWER(CONCAT('%', :venueName, '%')))
-          AND (:organizerName IS NULL OR LOWER(o.email) LIKE LOWER(CONCAT('%', :organizerName, '%')))
+        WHERE e.eventDate = :date
+          AND (v.name ILIKE %:venueName%)
+          AND (o.email ILIKE %:organizerName%)
+          AND (:tagName = '' OR EXISTS (
+                SELECT t FROM e.tags t WHERE t.name ILIKE %:tagName%
+              ))
     """)
-    Page<Event> findByFilters(
+    Page<Event> findByFiltersWithDate(
             @Param("date") LocalDate date,
+            @Param("tagName") String tagName,
+            @Param("venueName") String venueName,
+            @Param("organizerName") String organizerName,
+            Pageable pageable
+    );
+
+    @Query(value = """
+        SELECT e FROM Event e 
+        LEFT JOIN e.venue v 
+        LEFT JOIN e.organizer o
+        WHERE (v.name ILIKE %:venueName%)
+          AND (o.email ILIKE %:organizerName%)
+          AND (:tagName = '' OR EXISTS (
+                SELECT t FROM e.tags t WHERE t.name ILIKE %:tagName%
+              ))
+    """,
+            countQuery = """
+        SELECT COUNT(e) FROM Event e 
+        LEFT JOIN e.venue v 
+        LEFT JOIN e.organizer o
+        WHERE (v.name ILIKE %:venueName%)
+          AND (o.email ILIKE %:organizerName%)
+          AND (:tagName = '' OR EXISTS (
+                SELECT t FROM e.tags t WHERE t.name ILIKE %:tagName%
+              ))
+    """)
+    Page<Event> findByFiltersWithoutDate(
             @Param("tagName") String tagName,
             @Param("venueName") String venueName,
             @Param("organizerName") String organizerName,

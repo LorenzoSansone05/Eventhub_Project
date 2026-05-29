@@ -34,7 +34,18 @@ public class EventService {
 
     @Transactional(readOnly = true)
     public Page<EventResponseDTO> getEventsByFilters(LocalDate date, String tag, String venueName, String organizerName, Pageable pageable) {
-        Page<Event> eventPage = eventRepository.findByFilters(date, tag, venueName, organizerName, pageable);
+
+        String cleanTag = (tag == null) ? "" : tag;
+        String cleanVenue = (venueName == null) ? "" : venueName;
+        String cleanOrganizer = (organizerName == null) ? "" : organizerName;
+
+        Page<Event> eventPage;
+
+        if (date == null) {
+            eventPage = eventRepository.findByFiltersWithoutDate(cleanTag, cleanVenue, cleanOrganizer, pageable);
+        } else {
+            eventPage = eventRepository.findByFiltersWithDate(date, cleanTag, cleanVenue, cleanOrganizer, pageable);
+        }
 
         List<EventResponseDTO> dtoList = new ArrayList<>();
 
