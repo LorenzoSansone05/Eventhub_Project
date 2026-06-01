@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EventHub - Catalogo Eventi</title>
+    <link rel="stylesheet" href="../css/events.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Eventi</h1>
+
+      <form class="filters-section" id="filters-form">
+        <div class="filter-group">
+          <label>Data</label>
+          <input type="date" name="date" />
+        </div>
+        <div class="filter-group">
+          <label>Tag</label>
+          <input type="text" name="tag" placeholder="Es. Programmazione" />
+        </div>
+        <div class="filter-group">
+          <label>Struttura (Venue)</label>
+          <input type="text" name="venueName" placeholder="Es. Palapartenope" />
+        </div>
+        <div class="filter-group">
+          <label>Organizzatore(Email)</label>
+          <input
+            type="text"
+            name="organizerName"
+            placeholder="Es. utente@organizer.com"
+          />
+        </div>
+        <button type="submit" class="btn-filter">Cerca</button>
+      </form>
+      <div class="events-grid">
+        <!-- Qui dentro ci saranno le card create dinamicamente con JS -->
+      </div>
+    </div>
+    <div class="pagination-container">
+      <button id="btn-prev" class="btn-page">Precedente</button>
+      <span id="page-number">Pagina 1</span>
+      <button id="btn-next" class="btn-page">Successivo</button>
+    </div>
+    <script src="../js/events.js"></script>
+  </body>
+</html>

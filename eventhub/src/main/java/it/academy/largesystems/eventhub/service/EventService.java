@@ -3,6 +3,7 @@ package it.academy.largesystems.eventhub.service;
 import it.academy.largesystems.eventhub.config.SecurityUtil;
 import it.academy.largesystems.eventhub.dto.EventCreateRequestDTO;
 import it.academy.largesystems.eventhub.dto.EventResponseDTO;
+import it.academy.largesystems.eventhub.dto.EventSummaryResponseDTO;
 import it.academy.largesystems.eventhub.entity.*;
 import it.academy.largesystems.eventhub.exception.ForbiddenException;
 import it.academy.largesystems.eventhub.exception.ResourceNotFoundException;
@@ -27,7 +28,6 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final SpeakerRepository speakerRepository;
-    private final UserRepository userRepository;
     private final VenueRepository venueRepository;
     private final TagRepository tagRepository;
     private final SecurityUtil securityUtil;

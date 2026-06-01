@@ -82,6 +82,7 @@ public class Event {
     @PrePersist
     public void onCreate() {
         createdAt = Instant.now();
+        updatedAt = Instant.now();
     }
 
     @PreUpdate
