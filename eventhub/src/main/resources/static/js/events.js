@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
     currentPage = currentPage + 1;
     loadEvents(filtersForm);
   });
+  
 });
 
 function loadEvents(formElement) {

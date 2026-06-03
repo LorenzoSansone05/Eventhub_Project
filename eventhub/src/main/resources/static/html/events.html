@@ -4,9 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EventHub - Catalogo Eventi</title>
+    <link rel="stylesheet" href="../css/global.css" />
     <link rel="stylesheet" href="../css/events.css" />
   </head>
   <body>
+    <nav class="navbar">
+      <ul class="nav-links">
+        <li><a href="index.html">🏠 EventHub</a></li>
+        <li><a href="events.html">Eventi</a></li>
+        <li class="btn-login"><a href="login.html">Accedi</a></li>
+      </ul>
+    </nav>
+
     <div class="container">
       <h1>Eventi</h1>
 
@@ -34,6 +43,22 @@
         <button type="submit" class="btn-filter">Cerca</button>
       </form>
       <div class="events-grid">
+
+        <div class="event-card">
+          <h2 class="event-title">Nome dell'Evento Placeholder</h2>
+
+          <p class="event-info"><span>Data:</span> GG/MM/AAAA</p>
+          <p class="event-info"><span>Ora:</span> 00:00</p>
+          <p class="event-info"><span>Città:</span> Nome Città</p>
+          <p class="event-info"><span>Prezzo:</span> €00.00</p>
+
+          <div class="tags-container">
+            <span class="tag-badge">Tag 1</span>
+            <span class="tag-badge">Tag 2</span>
+          </div>
+
+          <a href="#" class="btn-detail">Vedi Dettaglio</a>
+        </div>
         <!-- Qui dentro ci saranno le card create dinamicamente con JS -->
       </div>
     </div>
@@ -42,6 +67,7 @@
       <span id="page-number">Pagina 1</span>
       <button id="btn-next" class="btn-page">Successivo</button>
     </div>
+    <script src="../js/nav.js"></script>
     <script src="../js/events.js"></script>
   </body>
 </html>
