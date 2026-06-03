@@ -1,0 +1,120 @@
+.navbar {
+    margin-bottom: 0px !important;
+  }
+  .event-hero {
+    padding: 0.2rem 15%;
+  }
+
+  .hero-content h1 {
+    font-size: 3.5rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    color: white;
+  }
+
+  .event-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+  }
+
+  .tags-container {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .tag-badge {
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
+  .event-info {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(min-content, 0.8fr));
+    grid-template-rows: repeat(3, min-content);
+    gap: 1.5rem;
+    width: fit-content;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    height: fit-content;
+    transition: all 0.3s ease;
+  }
+
+  .event-info:hover {
+    transform: translateY(-5px);
+  }
+
+  .info-block {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .info-block:last-child {
+    margin-bottom: 0;
+  }
+
+  .info-block label {
+    font-size: 1rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .info-block p,
+  .info-block li {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    transition: all 0.3s ease;
+  }
+
+  .info-block p:hover,
+  .info-block label:hover,
+  .info-block li:hover {
+    font-size: 1.4rem;
+  }
+
+  .btn-booking-fixed,
+  .btn-goback-fixed {
+    position: fixed;
+    bottom: 3rem;
+    color: white;
+    padding: 1.2rem 3rem;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+    display: inline-block;
+    z-index: 1;
+  }
+
+  .btn-booking-fixed {
+    right: 3rem;
+    background-color: rgb(63, 94, 251, 1);
+  }
+
+  .btn-goback-fixed {
+    left: 3rem;
+    background-color: red;
+  }
+
+  .btn-booking-fixed:hover,
+  .btn-goback-fixed:hover {
+    transform: translateY(-3px);
+  }

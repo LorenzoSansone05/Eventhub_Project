@@ -1,0 +1,98 @@
+<style>
+  
+</style>
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EventHub - Dettagli evento</title>
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/event-detail.css">
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul class="nav-links">
+        <li><a href="index.html">🏠 EventHub</a></li>
+        <li><a href="events.html">Eventi</a></li>
+        <li class="btn-login"><a href="login.html">Accedi</a></li>
+      </ul>
+    </nav>
+    <header class="event-hero">
+      <div class="hero-content">
+        <h1 id="event-title">Nome del Grande Evento</h1>
+        <div class="tags-container" id="event-tags">
+          <span class="tag-badge">Concerto</span>
+          <span class="tag-badge">Rock</span>
+          <span class="tag-badge">Live</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="event-container">
+      <div class="event-info">
+        <div class="info-block">
+          <label>Data</label>
+          <p id="event-date">15 Luglio 2026</p>
+        </div>
+
+        <div class="info-block">
+          <label>Ora di inizio</label>
+          <p id="event-time-start">21:00</p>
+        </div>
+
+        <div class="info-block">
+          <label>Ora di fine</label>
+          <p id="event-time-end">23:30</p>
+        </div>
+
+        <div class="info-block">
+          <label>Sede / Location</label>
+          <p id="event-venue-name">Alcatraz</p>
+        </div>
+
+        <div class="info-block">
+          <label>Città</label>
+          <p id="event-venue-city">Milano</p>
+        </div>
+
+        <div class="info-block">
+          <label>Indirizzo</label>
+          <p id="event-venue-address">Via Valtellina, 25</p>
+        </div>
+
+        <div class="info-block">
+          <label>Prezzo Standard</label>
+          <p id="event-price-standard">€45.00</p>
+        </div>
+
+        <div class="info-block">
+          <label>Prezzo VIP</label>
+          <p id="event-price-vip">€90.00</p>
+        </div>
+
+        <div class="info-block">
+          <label>Contatto Organizzatore</label>
+          <p id="event-organizer-email">info@organizzatore.com</p>
+        </div>
+        <div class="info-block">
+          <label>Ospiti / Speakers</label>
+          <ul id="event-speakers-list" style="list-style: none;">
+            <li>Mario Rossi</li>
+            <li>Giuseppe Verdi</li>
+          </ul>
+        </div>
+
+        <div class="info-block">
+          <label>Recensioni Utenti</label>
+          <p id="reviews">4.5⭐ N Feedbacks</p>
+        </div>
+      </div>
+    </main>
+    <a href="booking.html" class="btn-booking-fixed">Prenota</a>
+    <a href="events.html" class="btn-goback-fixed">Indietro</a>
+    <script src="../js/nav.js"></script>
+    <script src="../js/event-detail.js"></script>
+  </body>
+</html>

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prenotazione Evento - EventHub</title>
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/booking.css " />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul class="nav-links">
+        <li><a href="index.html">🏠 EventHub</a></li>
+        <li><a href="events.html">Eventi</a></li>
+        <li class="btn-login"><a href="login.html">Accedi</a></li>
+      </ul>
+    </nav>
+
+    <main class="booking-container">
+      <h1>Prenota il tuo Biglietto</h1>
+
+      <form id="booking-form">
+        <div class="form-group">
+          <label>Evento</label>
+          <input type="text" id="event-title" readonly />
+        </div>
+
+        <div class="form-group">
+          <label>Data</label>
+          <input type="text" id="event-date" readonly />
+        </div>
+
+        <div class="time-grid">
+          <div class="form-group">
+            <label>Inizio</label>
+            <input type="text" id="event-time-start" readonly />
+          </div>
+          <div class="form-group">
+            <label>Fine</label>
+            <input type="text" id="event-time-end" readonly />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Location</label>
+          <input type="text" id="event-venue" readonly />
+        </div>
+
+        <hr
+          style="
+            border: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            margin: 1.2rem 0;
+          "
+        />
+
+        <div class="form-group">
+          <label>Tipo di Biglietto</label>
+          <select id="ticket-type">
+            <option value="standard">Standard</option>
+            <option value="vip">VIP</option>
+          </select>
+        </div>
+
+        <div class="price-display">
+          Prezzo Totale: <span id="total-price">€0.00</span>
+        </div>
+
+        <button type="submit" class="btn-submit">Conferma Prenotazione</button>
+        <a href="events.html" id="back-link" class="btn-back">Annulla</a>
+      </form>
+    </main>
+
+    <script src="../js/booking.js"></script>
+    <script src="../js/nav.js"></script>
+  </body>
+</html>
