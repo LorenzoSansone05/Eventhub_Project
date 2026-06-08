@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recensisci Evento - EventHub</title>
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/doFeedback.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul class="nav-links">
+        <li><a href="index.html">🏠 EventHub</a></li>
+        <li><a href="events.html">Eventi</a></li>
+        <li class="btn-login"><a href="login.html">Accedi</a></li>
+      </ul>
+    </nav>
+
+    <main class="review-container">
+      <h1>Lascia una Recensione</h1>
+
+      <form id="review-form">
+        <div class="form-group">
+          <label>Il tuo Voto</label>
+          <div class="star-rating">
+            <input
+              type="radio"
+              id="star5"
+              name="rating"
+              value="5"
+              required
+            /><label for="star5" title="5 stelle">★</label>
+            <input type="radio" id="star4" name="rating" value="4" /><label
+              for="star4"
+              title="4 stelle"
+              >★</label
+            >
+            <input type="radio" id="star3" name="rating" value="3" /><label
+              for="star3"
+              title="3 stelle"
+              >★</label
+            >
+            <input type="radio" id="star2" name="rating" value="2" /><label
+              for="star2"
+              title="2 stelle"
+              >★</label
+            >
+            <input type="radio" id="star1" name="rating" value="1" /><label
+              for="star1"
+              title="1 stella"
+              >★</label
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="review-text"
+            >Cosa ti ha portato a dare questa votazione?</label
+          >
+          <textarea
+            id="review-text"
+            placeholder="Raccontaci la tua esperienza, cosa ti è piaciuto e cosa si potrebbe migliorare..."
+            maxlength="500"
+            rows="5"
+            required
+          ></textarea>
+        </div>
+
+        <hr
+          style="
+            border: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            margin: 1.2rem 0;
+          "
+        />
+
+        <button type="submit" class="btn-submit">Invia Recensione</button>
+        <a href="events.html" id="back-link" class="btn-back">Annulla</a>
+      </form>
+    </main>
+
+    <script src="../js/doFeedback.js"></script>
+    <script src="../js/nav.js"></script>
+  </body>
+</html>

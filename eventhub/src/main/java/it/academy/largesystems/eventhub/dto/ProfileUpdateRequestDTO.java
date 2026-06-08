@@ -25,6 +25,10 @@ public class ProfileUpdateRequestDTO {
     @Schema(description = "Cognome dell'utente", example = "Rossi", requiredMode = Schema.RequiredMode.REQUIRED)
     private String surname;
 
+    @NotBlank(message = "La Foto è obbligatoria")
+    @Schema(description = "Foto dell'utente", example = "foto.png", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String photoUrl;
+
     @Past(message = "La data di nascita deve essere nel passato")
     @Schema(description = "Data di nascita (deve essere una data passata)", example = "1995-04-23")
     private LocalDate birthDate;

@@ -27,6 +27,9 @@ public class ProfileResponseDTO {
     @Schema(description = "Cognome dell'utente", example = "Rossi")
     private String surname;
 
+    @Schema(description = "Foto dell'utente", example = "foto.png")
+    private String photoUrl;
+
     @Schema(description = "Data di nascita dell'utente (formato ISO YYYY-MM-DD)", example = "1995-04-23")
     private LocalDate birthDate;
 

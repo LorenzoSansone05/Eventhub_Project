@@ -6,6 +6,11 @@
   color:#ffffff;
 }
 
+html {
+  scrollbar-color: #3f5efb #121212;
+  scrollbar-width: auto;
+}
+
 body {
     background: radial-gradient(
     circle,

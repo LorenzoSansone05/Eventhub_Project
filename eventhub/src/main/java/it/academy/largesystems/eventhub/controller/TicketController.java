@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/tickets")
 @AllArgsConstructor
@@ -21,6 +23,17 @@ import org.springframework.web.bind.annotation.*;
 public class TicketController {
 
     private final TicketService ticketService;
+
+    // USER
+    @GetMapping
+    @Operation(
+            summary = "Recupera i biglietti dell'utente autenticato",
+            description = "Restituisce la lista completa di tutti i biglietti dell'utente, inclusi id utente, email e stato recensione."
+    )
+    @ApiResponse(responseCode = "200", description = "Lista biglietti recuperata correttamente")
+    public ResponseEntity<List<BookTicketResponseDTO>> getTickets() {
+        return ResponseEntity.ok(ticketService.getTickets());
+    }
 
     // USER
     @PostMapping("/events/{id}/book")

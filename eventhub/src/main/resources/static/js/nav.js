@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (userRole === "ROLE_USER") {
       navbarHtml +=
-        "<li><a href='feedbacks.html'>Recensioni</a></li>" +
+        "<li><a href='tickets.html'>Recensioni</a></li>" +
         "<li><a href='profile.html'>Profilo</a></li>" +
         "<li><a href='#' id='btn-logout'>Esci</a></li>";
     }

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EventHub - I Miei Biglietti</title>
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/tickets.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul class="nav-links">
+        <li><a href="index.html">🏠 EventHub</a></li>
+        <li><a href="events.html">Eventi</a></li>
+        <li class="btn-login"><a href="login.html">Accedi</a></li>
+      </ul>
+    </nav>
+
+    <div class="flex-container">
+      <div class="info-alert">
+        <span>I tuoi acquisti:</span> Qui trovi il riepilogo di tutti i tuoi
+        biglietti e lo stato delle recensioni.
+      </div>
+
+      <div id="tickets-container">
+        <div class="ticket-card">
+          <div class="ticket-header-badges">
+            <span class="ticket-type-badge type-vip">VIP</span>
+            <span class="ticket-id-badge">ID Evento: 42</span>
+          </div>
+
+          <h3>Concerto Rock - Summer Festival</h3>
+
+          <div class="ticket-details">
+            <div class="detail-item"><span>Prezzo:</span> € 75,00</div>
+            <div class="detail-item"><span>Data:</span> 15 Luglio 2026</div>
+            <div class="detail-item"><span>Inizio:</span> 21:00 (Fuso IT)</div>
+            <div class="detail-item"><span>Fine:</span> 23:30 (Fuso IT)</div>
+          </div>
+
+          <hr />
+
+          <div class="ticket-actions">
+            <button class="btn-review">Lascia una recensione</button>
+            <button class="btn-cancel">Cancella Prenotazione</button>
+          </div>
+        </div>
+
+        <div class="ticket-card">
+          <div class="ticket-header-badges">
+            <span class="ticket-type-badge type-standard">STANDARD</span>
+            <span class="ticket-id-badge">ID Evento: 105</span>
+          </div>
+
+          <h3>Mostra d'Arte Contemporanea</h3>
+
+          <div class="ticket-details">
+            <div class="detail-item"><span>Prezzo:</span> € 15,00</div>
+            <div class="detail-item"><span>Data:</span> 22 Ottobre 2026</div>
+            <div class="detail-item"><span>Inizio:</span> 10:00 (Fuso IT)</div>
+            <div class="detail-item"><span>Fine:</span> 18:00 (Fuso IT)</div>
+          </div>
+
+          <hr />
+
+          <div class="ticket-actions">
+            <p class="review-status done">
+              ✓ Hai già recensito questo evento. Grazie!
+            </p>
+            <button class="btn-cancel">Cancella Prenotazione</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../js/nav.js"></script>
+    <!-- <script src="../js/tickets.js"></script> -->
+  </body>
+</html>

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EventHub - Profilo</title>
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/profile.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul class="nav-links">
+        <li><a href="index.html">🏠 EventHub</a></li>
+        <li><a href="events.html">Eventi</a></li>
+        <li class="btn-login"><a href="login.html">Accedi</a></li>
+      </ul>
+    </nav>
+
+    <main class="profile-container">
+      <h1>Crea il tuo Profilo</h1>
+
+      <form id="profile-form" enctype="multipart/form-data">
+        <div class="form-group" style="text-align: center">
+          <label>Foto Profilo</label>
+
+          <div class="profile-preview-wrapper">
+            <img
+              id="profile-preview"
+            />
+          </div>
+
+          <input type="file" id="profile-picture" accept="image/*" />
+        </div>
+
+        <div class="name-grid">
+          <div class="form-group">
+            <label for="first-name">Nome</label>
+            <input
+              type="text"
+              id="first-name"
+              placeholder="Inserisci il tuo nome"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="last-name">Cognome</label>
+            <input
+              type="text"
+              id="last-name"
+              placeholder="Inserisci il tuo cognome"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="birth-date">Data di Nascita</label>
+          <input type="date" id="birth-date" required />
+        </div>
+
+        <div class="form-group">
+          <label for="city">Città</label>
+          <input
+            type="text"
+            id="city"
+            placeholder="Inserisci la tua città"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="description">Descrizione</label>
+          <textarea
+            id="description"
+            placeholder="Racconta qualcosa di te..."
+            maxlength="500"
+            rows="4"
+            style="resize: vertical; width: 100%; border-radius: 6px; padding: 10px;"
+          ></textarea>
+        </div>
+
+        <hr
+          style="
+            border: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            margin: 1.2rem 0;
+          "
+        />
+
+        <button type="submit" class="btn-submit">Salva Profilo</button>
+        <a href="index.html" id="back-link" class="btn-back">Annulla</a>
+      </form>
+    </main>
+
+    <script src="../js/profile.js"></script>
+    <script src="../js/nav.js"></script>
+  </body>
+</html>

@@ -11,6 +11,7 @@ import it.academy.largesystems.eventhub.exception.ForbiddenException;
 import it.academy.largesystems.eventhub.exception.ResourceConflictException;
 import it.academy.largesystems.eventhub.exception.ResourceNotFoundException;
 import it.academy.largesystems.eventhub.repository.EventRepository;
+import it.academy.largesystems.eventhub.repository.FeedbackRepository;
 import it.academy.largesystems.eventhub.repository.TicketRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +28,42 @@ public class TicketService {
 
     private final TicketRepository ticketRepository;
     private final EventRepository eventRepository;
+    private final FeedbackRepository feedbackRepository;
     private final SecurityUtil securityUtil;
+
+    @Transactional(readOnly = true)
+    public List<BookTicketResponseDTO> getTickets() {
+        User currentUser = securityUtil.getAuthenticatedUser();
+        List<Ticket> tickets = ticketRepository.findByUserId(currentUser.getId());
+        List<BookTicketResponseDTO> dtoList = new ArrayList<>();
+
+        for (Ticket ticket : tickets) {
+            Event event = ticket.getEvent();
+
+            boolean hasReviewed = feedbackRepository.existsByUserIdAndEventId(
+                    currentUser.getId(),
+                    event.getId()
+            );
+
+            BookTicketResponseDTO dto = new BookTicketResponseDTO(
+                    ticket.getId(),
+                    event.getId(),
+                    event.getName(),
+                    event.getEventDate(),
+                    event.getStartTime(),
+                    event.getEndTime(),
+                    currentUser.getId(),
+                    currentUser.getEmail(),
+                    ticket.getType(),
+                    ticket.getStatus(),
+                    ticket.getPrice(),
+                    hasReviewed
+            );
+
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
 
     @Transactional
     public BookTicketResponseDTO createBooking(Long eventId, TicketType type) {
@@ -62,8 +100,8 @@ public class TicketService {
         Ticket createdTicket = ticketRepository.save(ticket);
 
         return new BookTicketResponseDTO(
-                createdTicket.getId(), event.getId(), event.getName(), event.getEventDate(),
-                user.getId(), user.getEmail(), createdTicket.getType(), createdTicket.getStatus(), createdTicket.getPrice()
+                createdTicket.getId(), event.getId(), event.getName(), event.getEventDate(), event.getStartTime(), event.getEndTime(),
+                user.getId(), user.getEmail(), createdTicket.getType(), createdTicket.getStatus(), createdTicket.getPrice(), false
         );
     }
 

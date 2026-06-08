@@ -29,6 +29,7 @@ public class ProfileService {
         dto.setId(profile.getId());
         dto.setName(profile.getName());
         dto.setSurname(profile.getSurname());
+        dto.setPhotoUrl(profile.getPhotoUrl());
         dto.setBirthDate(profile.getBirth_date());
         dto.setCity(profile.getCity());
         dto.setDescription(profile.getDescription());
@@ -49,6 +50,7 @@ public class ProfileService {
         profile.setName(request.getName());
         profile.setSurname(request.getSurname());
         profile.setBirth_date(request.getBirthDate());
+        profile.setPhotoUrl(request.getPhotoUrl());
         profile.setCity(request.getCity());
         profile.setDescription(request.getDescription());
 
@@ -58,6 +60,7 @@ public class ProfileService {
         dto.setId(profile.getId());
         dto.setName(profile.getName());
         dto.setSurname(profile.getSurname());
+        dto.setPhotoUrl(profile.getPhotoUrl());
         dto.setBirthDate(profile.getBirth_date());
         dto.setCity(profile.getCity());
         dto.setDescription(profile.getDescription());
