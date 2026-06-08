@@ -158,4 +158,18 @@ public class UserService {
         user.setRole(targetRole);
         userRepository.save(user);
     }
+
+    @Transactional
+    public void updateUserBanStatus(Long id, boolean banned) {
+        User userToModify = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato con ID: " + id));
+
+        User currentAdmin = securityUtil.getAuthenticatedUser();
+        if (currentAdmin.getId().equals(userToModify.getId())) {
+            throw new ResourceConflictException("Impossibile modificare il proprio stato di ban.");
+        }
+
+        userToModify.setBanned(banned);
+        userRepository.save(userToModify);
+    }
 }

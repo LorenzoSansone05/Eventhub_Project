@@ -113,4 +113,22 @@ public class UserController {
         userService.updateUserRole(id, request.getNewRole());
         return ResponseEntity.ok("Ruolo utente aggiornato con successo.");
     }
+
+    // ADMIN
+    @PatchMapping("/{id}/ban")
+    @Operation(summary = "Aggiorna lo stato di ban di un utente", description = "Permette di bannare o sbannare un utente specifico tramite query param 'banned'. Richiede privilegi di ADMIN.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Stato di ban aggiornato con successo", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "404", description = "Utente non trovato"),
+            @ApiResponse(responseCode = "409", description = "Conflitto: l'amministratore ha provato a bannare se stesso")
+    })
+    public ResponseEntity<String> updateUserBanStatus(
+            @Parameter(description = "ID dell'utente a cui modificare lo stato di ban", example = "1") @PathVariable Long id,
+            @Parameter(description = "Nuovo stato di ban (true per bannare, false per sbloccare)", example = "true") @RequestParam boolean banned) {
+
+        userService.updateUserBanStatus(id, banned);
+
+        String messaggio = banned ? "Utente bannato con successo." : "Utente sbloccato con successo.";
+        return ResponseEntity.ok(messaggio);
+    }
 }

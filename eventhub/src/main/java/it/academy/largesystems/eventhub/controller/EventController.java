@@ -21,7 +21,6 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/events")
-@CrossOrigin(origins = "*")
 @AllArgsConstructor
 @Tag(name = "Eventi", description = "Specifiche per la ricerca, creazione, modifica e rimozione degli eventi")
 public class EventController {

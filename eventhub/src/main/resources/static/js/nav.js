@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "<li><a href='users.html'>Utenti</a></li>" +
         "<li><a href='venues.html'>Sedi</a></li>" +
         "<li><a href='feedbacks.html'>Recensioni</a></li>" +
+        "<li><a href='tags.html'>Tag</a></li>" +
         "<li><a href='#' id='btn-logout'>Esci</a></li>";
     }
 

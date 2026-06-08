@@ -30,9 +30,11 @@ body {
 
 .input-group {
   margin-bottom: 1.5rem;
+  width: 100%;
 }
 
 .input-group label {
+  width: 100%;
   display: block;
   margin-bottom: 0.5rem;
   color: #b7b5b5;
@@ -41,11 +43,13 @@ body {
 
 .input-group input {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.75rem 0px 0.75rem 0.75rem;
   border: none;
   border-radius: 4px;
   font-size: 1.2rem;
   outline: none; 
+  box-sizing: border-box;
+  color: black;
 }
 
 .btn-submit {
