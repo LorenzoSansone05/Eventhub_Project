@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <title>EventHub - Gestione Location</title>
     <link rel="stylesheet" href="../css/global.css" />
-    <link rel="stylesheet" href="../css/venues.css">
+    <link rel="stylesheet" href="../css/venues.css" />
   </head>
   <body>
     <nav class="navbar">
@@ -14,10 +14,61 @@
         <li class="btn-login"><a href="login.html">Accedi</a></li>
       </ul>
     </nav>
+
     <div class="flex-container">
       <div class="admin-alert">
-        <span>Modalità Amministratore:</span> Visualizzazione completa di
-        tutte le sedi salvate.
+        <span>Modalità Amministratore:</span> Visualizzazione completa di tutte
+        le sedi salvate e inserimento nuove strutture.
+      </div>
+
+      <div class="venue-card form-card">
+        <h3 class="form-title">Aggiungi Nuova Sede</h3>
+        <form id="create-venue-form">
+          <div class="venue-details">
+            <div class="form-group-venue">
+              <label for="venue-name">Nome Location</label>
+              <input
+                type="text"
+                id="venue-name"
+                placeholder="Es. Alcatraz"
+                minlength="2"
+                maxlength="100"
+                required
+              />
+            </div>
+            <div class="form-group-venue">
+              <label for="venue-capacity">Capacità Massima</label>
+              <input
+                type="number"
+                id="venue-capacity"
+                placeholder="Minimo 10"
+                min="10"
+                required
+              />
+            </div>
+            <div class="form-group-venue">
+              <label for="venue-city">Città</label>
+              <input
+                type="text"
+                id="venue-city"
+                placeholder="Es. Milano"
+                required
+              />
+            </div>
+            <div class="form-group-venue">
+              <label for="venue-address">Indirizzo</label>
+              <input
+                type="text"
+                id="venue-address"
+                placeholder="Es. Via Valtellina 25"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-save">Salva Location</button>
+          </div>
+        </form>
       </div>
 
       <div id="venues-container">
@@ -25,6 +76,34 @@
           <span class="venue-id-badge">ID: 14</span>
 
           <h3>Stadium Olimpico</h3>
+
+          <div class="edit-form-container">
+            <h4 class="edit-form-title">Modifica Dettagli Location</h4>
+            <form class="edit-venue-form">
+              <div class="venue-details">
+                <div class="form-group-venue">
+                  <label>Nome Location</label>
+                  <input type="text" value="Stadium Olimpico" required />
+                </div>
+                <div class="form-group-venue">
+                  <label>Capacità Massima</label>
+                  <input type="number" value="70000" min="10" required />
+                </div>
+                <div class="form-group-venue">
+                  <label>Città</label>
+                  <input type="text" value="Roma" required />
+                </div>
+                <div class="form-group-venue">
+                  <label>Indirizzo</label>
+                  <input type="text" value="Viale dei Gladiatori 2, 00135" required />
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn-cancel">Annulla</button>
+                <button type="submit" class="btn-update">Aggiorna</button>
+              </div>
+            </form>
+          </div>
 
           <div class="venue-details">
             <div class="detail-item"><span>Città :</span> Roma</div>
@@ -36,6 +115,8 @@
             </div>
           </div>
 
+          
+
           <hr />
           <div class="admin-actions">
             <button class="btn-edit">Modifica Location</button>
@@ -44,6 +125,7 @@
         </div>
       </div>
     </div>
+
     <!-- <script src="../js/venues.js"></script> -->
     <script src="../js/nav.js"></script>
   </body>

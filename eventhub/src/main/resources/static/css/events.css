@@ -69,6 +69,7 @@ h1 {
 .event-card {
     background: rgba(255, 255, 255, 0.25);
     backdrop-filter: blur(10px);
+    border: 1px solid #dcdde1;
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 6px 12px rgba(0,0,0,0.1);

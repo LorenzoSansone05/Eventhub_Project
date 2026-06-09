@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <title>EventHub - Gestione Recensioni</title>
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/feedbacks.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul class="nav-links">
+        <li><a href="index.html">🏠 EventHub</a></li>
+        <li><a href="events.html">Eventi</a></li>
+        <li class="btn-login"><a href="login.html">Accedi</a></li>
+      </ul>
+    </nav>
+
+    <div class="flex-container">
+      <div class="admin-alert">
+        <span>Modalità Amministratore:</span> Moderazione e gestione delle recensioni degli utenti.
+      </div>
+
+      <div id="feedbacks-container">
+        <div class="feedback-card">
+          <span class="feedback-id-badge">ID: 102</span>
+
+          <h3>Utente: Marco89</h3>
+
+          <div class="feedback-display-details">
+            <div class="detail-item">
+              <span>Valutazione :</span> <span class="stars-display">⭐⭐⭐⭐★ (4/5)</span>
+            </div>
+            <div class="detail-item full-width">
+              <span>Testo del Feedback :</span> L'evento è stato organizzato molto bene, ottimi i relatori e la location. Unica pecca la fila all'ingresso, spero migliori la prossima volta.
+            </div>
+          </div>
+
+          <div class="edit-form-container">
+            <h4 class="edit-form-title">Modifica Recensione</h4>
+            <form class="edit-feedback-form">
+              <div class="feedback-details-grid">
+                <div class="form-group-feedback">
+                  <label>Valutazione (Stelle 1-5)</label>
+                  <input type="number" value="4" min="1" max="5" readonly />
+                </div>
+              </div>
+              <div class="form-group-feedback" style="margin-top: 15px;">
+                <label>Testo del Feedback</label>
+                <textarea rows="4" required>L'evento è stato organizzato molto bene, ottimi i relatori e la location. Unica pecca la fila all'ingresso, spero migliori la prossima volta.</textarea>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn-cancel">Annulla</button>
+                <button type="submit" class="btn-update">Aggiorna</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="admin-actions">
+            <button class="btn-edit">Modifica Recensione</button>
+            <button class="btn-delete">Elimina</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/nav.js"></script>
+  </body>
+</html>

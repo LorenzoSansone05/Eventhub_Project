@@ -1,7 +1,6 @@
 package it.academy.largesystems.eventhub.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import it.academy.largesystems.eventhub.entity.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

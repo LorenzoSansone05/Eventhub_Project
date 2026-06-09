@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <title>EventHub - Gestione Relatori</title>
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/speakers.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul class="nav-links">
+        <li><a href="index.html">🏠 EventHub</a></li>
+        <li><a href="events.html">Eventi</a></li>
+        <li class="btn-login"><a href="login.html">Accedi</a></li>
+      </ul>
+    </nav>
+
+    <div class="flex-container">
+      <div class="admin-alert">
+        <span>Modalità Amministratore:</span> Gestione completa di tutti
+        i relatori.
+      </div>
+
+      <div class="speaker-card form-card">
+        <h3 class="form-title">Aggiungi Nuovo Relatore</h3>
+        <form id="create-speaker-form">
+          <div class="speaker-details-grid">
+            <div class="form-group-speaker">
+              <label for="speaker-name">Nome</label>
+              <input
+                type="text"
+                id="speaker-name"
+                placeholder="Es. Mario"
+                required
+              />
+            </div>
+            <div class="form-group-speaker">
+              <label for="speaker-surname">Cognome</label>
+              <input
+                type="text"
+                id="speaker-surname"
+                placeholder="Es. Rossi"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-group-speaker" style="margin-top: 15px;">
+            <label for="speaker-bio">Biografia</label>
+            <textarea
+              id="speaker-bio"
+              placeholder="Breve biografia professionale del relatore..."
+              rows="4"
+              required
+            ></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-save">Salva Relatore</button>
+          </div>
+        </form>
+      </div>
+
+      <div id="speakers-container">
+        <div class="speaker-card">
+          <span class="speaker-id-badge">ID: 05</span>
+
+          <h3>Alessandro Bianchi</h3>
+
+          <div class="speaker-display-details">
+            <div class="detail-item"><span>Nome :</span> Alessandro</div>
+            <div class="detail-item"><span>Cognome :</span> Bianchi</div>
+            <div class="detail-item full-width">
+              <span>Biografia :</span> Esperto di intelligenza artificiale ecloud computing con oltre 10 anni di esperienza nel settore Tech.
+            </div>
+          </div>
+
+          <div class="edit-form-container">
+            <h4 class="edit-form-title">Modifica Dettagli Relatore</h4>
+            <form class="edit-speaker-form">
+              <div class="speaker-details-grid">
+                <div class="form-group-speaker">
+                  <label>Nome</label>
+                  <input type="text" value="Alessandro" required />
+                </div>
+                <div class="form-group-speaker">
+                  <label>Cognome</label>
+                  <input type="text" value="Bianchi" required />
+                </div>
+              </div>
+              <div class="form-group-speaker" style="margin-top: 15px;">
+                <label>Biografia</label>
+                <textarea rows="4" required>Esperto di cloud computing con oltre 10 anni di esperienza nel settore Tech.</textarea>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn-cancel">Annulla</button>
+                <button type="submit" class="btn-update">Aggiorna</button>
+              </div>
+            </form>
+          </div>
+
+          <hr />
+          <div class="admin-actions">
+            <button class="btn-edit">Modifica Relatore</button>
+            <button class="btn-delete">Elimina</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/nav.js"></script>
+  </body>
+</html>

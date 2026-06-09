@@ -1,6 +1,7 @@
 package it.academy.largesystems.eventhub.controller;
 
 import it.academy.largesystems.eventhub.dto.FeedbackRequestDTO;
+import it.academy.largesystems.eventhub.dto.FeedbackResponseDTO;
 import it.academy.largesystems.eventhub.service.FeedbackService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/feedbacks")
 @RequiredArgsConstructor
@@ -20,6 +23,18 @@ import org.springframework.web.bind.annotation.*;
 public class FeedbackController {
 
     private final FeedbackService feedbackService;
+
+    @GetMapping
+    public ResponseEntity<List<FeedbackResponseDTO>> getAllFeedbacks() {
+        List<FeedbackResponseDTO> feedbacks = feedbackService.getAllFeedbacks();
+        return ResponseEntity.ok(feedbacks);
+    }
+
+    @GetMapping("/event/{eventId}")
+    public ResponseEntity<List<FeedbackResponseDTO>> getFeedbacksByEventId(@PathVariable Long eventId) {
+        List<FeedbackResponseDTO> feedbacks = feedbackService.getFeedbacksByEventId(eventId);
+        return ResponseEntity.ok(feedbacks);
+    }
 
     // USER
     @PostMapping
@@ -51,11 +66,10 @@ public class FeedbackController {
             @ApiResponse(responseCode = "403", description = "Privilegi insufficienti (l'utente non è un ADMIN)"),
             @ApiResponse(responseCode = "404", description = "Feedback o evento correlato non trovato")
     })
-    public ResponseEntity<String> update(
+    public ResponseEntity<FeedbackResponseDTO> update(
             @PathVariable @Parameter(description = "ID univoco del feedback da modificare", example = "10") Long id,
             @Valid @RequestBody FeedbackRequestDTO request) {
-        feedbackService.updateFeedback(id, request);
-        return ResponseEntity.ok("Feedback aggiornato con successo.");
+        return ResponseEntity.ok(feedbackService.updateFeedback(id, request));
     }
 
     // ADMIN

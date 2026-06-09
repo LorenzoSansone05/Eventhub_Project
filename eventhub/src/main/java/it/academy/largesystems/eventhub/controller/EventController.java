@@ -2,7 +2,6 @@ package it.academy.largesystems.eventhub.controller;
 
 import it.academy.largesystems.eventhub.dto.EventCreateRequestDTO;
 import it.academy.largesystems.eventhub.dto.EventResponseDTO;
-import it.academy.largesystems.eventhub.dto.EventSummaryResponseDTO;
 import it.academy.largesystems.eventhub.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
