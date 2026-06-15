@@ -147,6 +147,8 @@ Istruzioni di avvio dell'app:
 
 Screenshot dell'app:
 
+
+
 !\[Schermata Login](eventhub/docs/screenshots/EventHub\_Login.png)
 
 
@@ -164,8 +166,6 @@ Screenshot dell'app:
 
 
 !\[Documentazione Swagger](eventhub/docs/screenshots/Swagger\_Documentation.png)
-
-
 
 
 
