@@ -10,11 +10,11 @@ L'utente non loggato (GUEST) puo solo vedere gli eventi, ma non prenotarsi a dif
 
 
 
-Gli Utenti Standard (USER) possono consultare il catalogo degli eventi filtrandoli per data, tag, organizer email o location, prenotare biglietti (Standard o VIP), gestire le proprie prenotazioni e lasciare recensioni e punteggi (feedback) per gli eventi passati.
+Gli Utenti Standard (USER) possono consultare il catalogo degli eventi filtrandoli per data, tag, organizer email o location, prenotare biglietti (Standard o VIP), gestire le proprie prenotazioni e lasciare recensioni e punteggi (feedback) per gli eventi pastati.
 
 
 
-Gli Organizzatori (ORGANIZER) possono inserire nuovi eventi nel sistema, modificarli, cancellarli, visualizzare la lista dei partecipanti che hanno prenotato un biglietto per i loro eventi e visualizzare le recensioni di ognio singolo evento creato dal singolo organizer
+Gli Organizzatori (ORGANIZER) possono inserire nuovi eventi nel sistema, modificarli, cancellarli, visualizzare la lista dei partecipanti che hanno prenotato un biglietto per i loro eventi e visualizzare las recensioni di ognio singolo evento creato dal singolo organizer
 
 
 
@@ -50,6 +50,8 @@ Java 17+, Maven, Docker, Git, Postman.
 
 Configurazione database PostgreSQL: (CREDENZIALI FILE .env)
 
+
+
 services:
 
 &#x20; postgres:
@@ -60,13 +62,9 @@ services:
 
 &#x20;   restart: unless-stopped
 
-
-
 &#x20;   env\_file:
 
 &#x20;     - .env
-
-
 
 &#x20;   environment:
 
@@ -76,13 +74,9 @@ services:
 
 &#x20;     POSTGRES\_DB: ${POSTGRES\_DB}
 
-
-
 &#x20;   ports:
 
 &#x20;     - "${POSTGRES\_PORT}:5432"
-
-
 
 &#x20;   volumes:
 
@@ -98,13 +92,9 @@ services:
 
 &#x20;   restart: unless-stopped
 
-
-
 &#x20;   ports:
 
 &#x20;     - "${ADMINER\_PORT}:8080"
-
-
 
 &#x20;   depends\_on:
 
@@ -124,7 +114,7 @@ Istruzioni di avvio dell'app:
 
 
 
-1. Clonare il repository: git clone https://github.com/LorenzoSansone05/Eventhub\_Project.git , cd Eventhub\_Project
+Clonare il repository: git clone \[https://github.com/LorenzoSansone05/Eventhub\_Project.git](https://github.com/LorenzoSansone05/Eventhub\_Project.git) , cd Eventhub\_Project
 
 
 
@@ -134,13 +124,14 @@ Istruzioni di avvio dell'app:
 
 3\. verificare l'avvio del servizio: docker ps
 
-4. Compilare e avviare il BE: mvn clean install, mvn spring-boot:run (oppure farlo da IDE se si preferisce)
+Compilare e avviare il BE: mvn clean install, mvn spring-boot:run (oppure farlo da IDE se si preferisce)
 
 
 
 5\. Accedere alla documentazione per avere chiare le idee sull'app: http://localhost:8080/swagger-ui.html
 
-6. Quando si vuole chiudere l'app bisogna anche fermare il servizio docker: docker-compose down
+Quando si vuole chiudere l'app bisogna anche fermare il servizio docker: docker-compose down
+
 
 
 
@@ -149,23 +140,21 @@ Screenshot dell'app:
 
 
 
-!\[Schermata Login](docs/screenshots/EventHub\_Login.png)
+!\[Schermata Login](eventhub/docs/screenshots/EventHub\_Login.png)
 
 
 
-!\[Gestione Venues ADMIN](docs/screenshots/Admin\_Venues.png)
+!\[Gestione Venues ADMIN](eventhub/docs/screenshots/Admin\_Venues.png)
 
 
 
-!\[Gestione evento ORGANIZER](docs/screenshots/Organizer\_Events.png)
+!\[Gestione evento ORGANIZER](eventhub/docs/screenshots/Organizer\_Events.png)
 
 
 
-!\[Ricerca eventi USER GUEST](docs/screenshots/Search\_Events.png)
+!\[Ricerca eventi USER GUEST](eventhub/docs/screenshots/Search\_Events.png)
 
 
 
-!\[Documentazione Swagger](docs/screenshots/Swagger\_Documentation.png)
-
-
+!\[Documentazione Swagger](eventhub/docs/screenshots/Swagger\_Documentation.png)
 
