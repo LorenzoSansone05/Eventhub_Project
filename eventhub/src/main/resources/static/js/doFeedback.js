@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
       var feedbackData = {
         eventId: parseInt(eventId, 10),
         rating: parseInt(selectedRating.value, 10),
-        comment: reviewText
+        feedbackText: reviewText
       };
 
       try {

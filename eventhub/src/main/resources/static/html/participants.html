@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EventHub - Elenco Partecipanti</title>
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/participants.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul class="nav-links">
+        <li><a href="index.html">🏠 EventHub</a></li>
+        <li><a href="events.html">Eventi</a></li>
+        <li class="btn-login"><a href="login.html">Accedi</a></li>
+      </ul>
+    </nav>
+
+    <div class="flex-container">
+      <h1 id="event-title" style="margin-bottom: 10px; color: white; font-size: 2em;">Caricamento evento...</h1>
+
+      <div class="organizer-alert">
+        <span>Modalità Organizzatore:</span> Lista dei partecipanti prenotati a questo evento. La visualizzazione è in sola lettura.
+      </div>
+
+      <div id="participants-container">
+        <div class="participant-card">
+          <div class="participant-header-badges">
+            <span class="ticket-type-badge type-vip">VIP</span>
+            <span class="participant-id-badge">ID Biglietto: 1542</span>
+          </div>
+
+          <h3>marco.rossi@example.com</h3>
+
+          <div class="participant-details">
+            <div class="detail-item"><span>ID Utente:</span> 42</div>
+            <div class="detail-item"><span>Prezzo Biglietto:</span> € 75,00</div>
+            <div class="detail-item"><span>Data Prenotazione:</span> 12 Maggio 2026</div>
+          </div>
+        </div>
+
+        <div class="participant-card">
+          <div class="participant-header-badges">
+            <span class="ticket-type-badge type-standard">STANDARD</span>
+            <span class="participant-id-badge">ID Biglietto: 1543</span>
+          </div>
+
+          <h3>laura.b@example.com</h3>
+
+          <div class="participant-details">
+            <div class="detail-item"><span>ID Utente:</span> 105</div>
+            <div class="detail-item"><span>Prezzo Biglietto:</span> € 15,00</div>
+            <div class="detail-item"><span>Data Prenotazione:</span> 14 Maggio 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/nav.js"></script>
+    <script src="../js/participants.js"></script>
+  </body>
+</html>

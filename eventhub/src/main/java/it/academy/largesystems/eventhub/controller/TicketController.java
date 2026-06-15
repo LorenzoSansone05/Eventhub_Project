@@ -2,6 +2,7 @@ package it.academy.largesystems.eventhub.controller;
 
 import it.academy.largesystems.eventhub.dto.BookTicketRequestDTO;
 import it.academy.largesystems.eventhub.dto.BookTicketResponseDTO;
+import it.academy.largesystems.eventhub.dto.ParticipantResponseDTO;
 import it.academy.largesystems.eventhub.service.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

@@ -1,27 +1,33 @@
 package it.academy.largesystems.eventhub.config;
 
-import it.academy.largesystems.eventhub.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 @Component
-@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
-    private final UserRepository userRepository;
+    private final UserDetailsService userDetailsService;
+
+    public JwtAuthenticationFilter(JwtProvider jwtProvider, @Lazy UserDetailsService userDetailsService) {
+        this.jwtProvider = jwtProvider;
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -36,21 +42,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String email = jwtProvider.extractEmail(token);
 
                 if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
-                    UserDetails userDetails = userRepository.findByEmail(email)
-                            .orElseThrow(() -> new UsernameNotFoundException("Utente non trovato"));
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
                     if (userDetails.isEnabled()) {
+                        List<SimpleGrantedAuthority> authorities = jwtProvider.extractAuthorities(token);
+
+                        if (authorities.isEmpty()) {
+                            authorities = (List<SimpleGrantedAuthority>) userDetails.getAuthorities();
+                        }
+
                         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                                userDetails, null, userDetails.getAuthorities());
+                                userDetails, null, authorities);
 
                         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
                         SecurityContextHolder.getContext().setAuthentication(authToken);
                     }
                 }
             } catch (Exception e) {
-                logger.error("Impossibile impostare l'autenticazione utente nel contesto di sicurezza", e);
+                logger.error("Non è stato possibile definire l'autenticazione nel security spring context", e);
             }
         }
 

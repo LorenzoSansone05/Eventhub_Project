@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const tagName = input.value.trim();
 
             if (tagName === "") {
-                alert("Please enter a tag name!");
+                alert("Inserisci il tag da creare");
                 return;
             }
 
@@ -28,11 +28,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify({ name: tagName })
             }).then(function (response) {
                 if (response.ok) {
-                    alert("Tag created successfully!");
+                    alert("Tag creato con successo!");
                     input.value = ""; 
                     loadTagsFromServer(); 
                 } else {
-                    alert("Error creating tag. The tag might already exist.");
+                    alert("Errore durante la creazione del tag");
                 }
             });
         });
@@ -57,16 +57,16 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if (target.classList.contains('btn-tag-delete')) {
-                if (confirm("Are you sure you want to delete this tag?")) {
+                if (confirm("Sei sicuro di voler eliminare questo tag?")) {
                     fetch(API_URL + '/' + tagId, {
                         method: 'DELETE',
                         headers: headersConfig
                     }).then(function (response) {
                         if (response.ok) {
-                            alert("Tag deleted!");
+                            alert("Tag cancellato!");
                             card.remove();
                         } else {
-                            alert("Error deleting tag.");
+                            alert("Errore durante l'eliminazione del tag");
                         }
                     });
                 }
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const newName = inputEdit.value.trim();
 
                 if (newName === "") {
-                    alert("The name field cannot be empty!");
+                    alert("Aggiungi il nuovo tag per favore");
                     return;
                 }
 
@@ -87,11 +87,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     body: JSON.stringify({ name: newName })
                 }).then(function (response) {
                     if (response.ok) {
-                        alert("Tag updated!");
+                        alert("Tag modificato!");
                         card.querySelector('h3').textContent = '#' + newName.toUpperCase();
                         document.getElementById('edit-tag-box-' + tagId).classList.remove('active');
                     } else {
-                        alert("Error updating tag.");
+                        alert("Errore durante la modifica del tag");
                     }
                 });
             }
@@ -119,23 +119,23 @@ function loadTagsFromServer() {
                     
                     <div class="tag-details">
                         <div class="detail-item edit-tag-box" id="edit-tag-box-${tag.id}">
-                            <span>New Name:</span>
+                            <span>Nuovo tag:</span>
                             <input type="text" class="tag-input-edit" id="input-tag-${tag.id}" value="${tag.name}">
-                            <button class="btn-edit-save btn-edit">Save</button>
-                            <button class="btn-edit-cancel btn-delete">Cancel</button>
+                            <button class="btn-edit-save btn-edit">Salva</button>
+                            <button class="btn-edit-cancel btn-delete">Cancella</button>
                         </div>
                     </div>
                     
                     <hr />
                     <div class="admin-actions">
-                        <button class="btn-toggle-edit btn-edit">Edit Name</button>
-                        <button class="btn-tag-delete btn-delete">Delete</button>
+                        <button class="btn-toggle-edit btn-edit">Modifica</button>
+                        <button class="btn-tag-delete btn-delete">Elimina</button>
                     </div>
                 </div>
             `;
         });
     })
     .catch(function (error) {
-        console.error("Error loading tags from backend server:", error);
+        console.error("Errore durante il caricamento dei tag da parte del server: ", error);
     });
 }

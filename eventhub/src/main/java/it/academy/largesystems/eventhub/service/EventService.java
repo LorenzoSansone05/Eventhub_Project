@@ -3,7 +3,7 @@ package it.academy.largesystems.eventhub.service;
 import it.academy.largesystems.eventhub.config.SecurityUtil;
 import it.academy.largesystems.eventhub.dto.EventCreateRequestDTO;
 import it.academy.largesystems.eventhub.dto.EventResponseDTO;
-import it.academy.largesystems.eventhub.dto.EventSummaryResponseDTO;
+import it.academy.largesystems.eventhub.dto.ParticipantResponseDTO;
 import it.academy.largesystems.eventhub.entity.*;
 import it.academy.largesystems.eventhub.exception.ForbiddenException;
 import it.academy.largesystems.eventhub.exception.ResourceNotFoundException;
@@ -31,13 +31,50 @@ public class EventService {
     private final VenueRepository venueRepository;
     private final TagRepository tagRepository;
     private final SecurityUtil securityUtil;
+    private final TicketRepository ticketRepository;
+
+    @Transactional(readOnly = true)
+    public List<ParticipantResponseDTO> getParticipantsByEvent(Long eventId) {
+        List<Ticket> tickets = ticketRepository.findByEventId(eventId);
+        List<ParticipantResponseDTO> dtoList = new ArrayList<>();
+
+        for (Ticket ticket : tickets) {
+            User participant = ticket.getUser();
+
+            ParticipantResponseDTO dto = new ParticipantResponseDTO(
+                    ticket.getId(),
+                    participant.getId(),
+                    participant.getEmail(),
+                    ticket.getType().name(),
+                    ticket.getStatus().name()
+            );
+
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
 
     @Transactional(readOnly = true)
     public Page<EventResponseDTO> getEventsByFilters(LocalDate date, String tag, String venueName, String organizerName, Pageable pageable) {
 
         String cleanTag = (tag == null) ? "" : tag;
         String cleanVenue = (venueName == null) ? "" : venueName;
+
+
         String cleanOrganizer = (organizerName == null) ? "" : organizerName;
+
+        try {
+            User currentUser = securityUtil.getAuthenticatedUser();
+
+            if (currentUser.getRole() != null) {
+                String roleName = currentUser.getRole().getName();
+                if ("ROLE_ORGANIZER".equals(roleName) || "ORGANIZER".equals(roleName)) {
+                    cleanOrganizer = currentUser.getEmail();
+                }
+            }
+        } catch (SecurityException e) {
+            // GUEST CASE
+        }
 
         Page<Event> eventPage;
 

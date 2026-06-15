@@ -93,7 +93,7 @@ function loadEvents(formElement) {
           "<div class='tags-container'>" +
           tagsHtml +
           "</div>" +
-          "<a href='detail.html?id=" +
+          "<a href='event-detail.html?id=" +
           currentEvent.id +
           "' class='btn-detail'>Vedi Dettaglio</a>" +
           "</div>";

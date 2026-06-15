@@ -60,6 +60,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 const card = target.closest('.feedback-card');
                 const feedbackId = card.id.replace('feedback-card-', '');
                 
+                const eventId = parseInt(target.getAttribute('data-event-id'), 10);
+                
                 const checkedRadio = target.querySelector('input[type="radio"]:checked');
                 const textareaText = target.querySelector('textarea');
                 
@@ -78,19 +80,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const dataToSend = {
                     rating: newRating,
-                    feedbackText: newText
+                    feedbackText: newText,
+                    eventId: eventId 
                 };
 
                 fetch(API_URL + '/' + feedbackId, {
                     method: 'PUT',
-                    headers: headersConfig,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
                     body: JSON.stringify(dataToSend)
                 })
                 .then(function (response) {
                     if (response.ok) {
                         return response.json(); 
                     } else {
-                        throw new Error("Errore durante l'aggiornamento del feedback.");
+                        throw new Error("Errore durante l'aggiornamento del feedback. Verifica i dati inseriti.");
                     }
                 })
                 .then(function (updatedFeedback) {
@@ -166,7 +172,7 @@ function loadFeedbacksFromServer() {
 
                   <div class="edit-form-container" id="edit-form-box-${feedback.id}">
                     <h4 class="edit-form-title">Modifica Recensione</h4>
-                    <form class="edit-feedback-form">
+                    <form class="edit-feedback-form" data-event-id="${feedback.eventId}">
                       <div class="feedback-details-grid">
                         <div class="form-group-feedback">
                           <label>Valutazione (Stelle 1-5)</label>

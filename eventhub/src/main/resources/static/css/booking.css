@@ -52,6 +52,10 @@
   gap: 1rem;
 }
 
+#ticket-type option {
+  color: black;
+}
+
 .price-display {
   font-size: 1.4rem;
   font-weight: bold;

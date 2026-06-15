@@ -1,0 +1,105 @@
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px 40px 20px;
+}
+
+.organizer-alert {
+  width: 100%;
+  max-width: 900px;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 0.95em;
+}
+
+.organizer-alert span {
+  color: white;
+  font-weight: bold;
+}
+
+#participants-container {
+  width: 100%;
+  max-width: 900px;
+}
+
+.participant-card {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 900px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 25px;
+  margin: 20px 0;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.participant-header-badges {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.participant-id-badge {
+  background-color: #7f8c8d;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+.ticket-type-badge {
+  color: white;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.type-vip {
+  background-color: #9b59b6;
+}
+
+.type-standard {
+  background-color: #2e86de;
+}
+
+.participant-card h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  color: white;
+  max-width: 70%; 
+}
+
+span {
+  font-weight: bold;
+  color: white;
+}
+
+.participant-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.detail-item {
+  font-size: 1em;
+  line-height: 1.4;
+}

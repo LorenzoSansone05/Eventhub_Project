@@ -2,6 +2,7 @@ package it.academy.largesystems.eventhub.service;
 
 import it.academy.largesystems.eventhub.config.SecurityUtil;
 import it.academy.largesystems.eventhub.dto.BookTicketResponseDTO;
+import it.academy.largesystems.eventhub.dto.ParticipantResponseDTO;
 import it.academy.largesystems.eventhub.entity.Event;
 import it.academy.largesystems.eventhub.entity.Ticket;
 import it.academy.largesystems.eventhub.entity.User;
@@ -30,6 +31,27 @@ public class TicketService {
     private final EventRepository eventRepository;
     private final FeedbackRepository feedbackRepository;
     private final SecurityUtil securityUtil;
+
+    @Transactional(readOnly = true)
+    public List<ParticipantResponseDTO> getParticipantsByEvent(Long eventId) {
+        List<Ticket> tickets = ticketRepository.findByEventId(eventId);
+        List<ParticipantResponseDTO> dtoList = new ArrayList<>();
+
+        for (Ticket ticket : tickets) {
+            User participant = ticket.getUser();
+
+            ParticipantResponseDTO dto = new ParticipantResponseDTO(
+                    ticket.getId(),
+                    participant.getId(),
+                    participant.getEmail(),
+                    ticket.getType().name(),
+                    ticket.getStatus().name()
+            );
+
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
 
     @Transactional(readOnly = true)
     public List<BookTicketResponseDTO> getTickets() {

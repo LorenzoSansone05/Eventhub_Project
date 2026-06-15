@@ -1,5 +1,4 @@
-// Global Configuration
-const API_BASE_URL = "http://localhost:8080/api/tickets";
+const API_BASE_URL = "http://localhost:8080/api";
 
 document.addEventListener("DOMContentLoaded", function () {
   loadUserTickets();
@@ -88,7 +87,7 @@ function renderTickets(tickets) {
 
       if (ticket.alreadyReviewed) {
         actionContent = `
-                    <p class="review-status done">✓ You already reviewed this event. Thank you!</p>
+                    <p class="review-status done">✓ Hai già recensito questo evento</p>
                     ${cancelBtnHtml}
                 `;
       } else if (isConcluded) {
@@ -148,7 +147,7 @@ async function handleDeleteBooking(ticketId) {
   const token = localStorage.getItem("EventHubToken");
 
   try {
-    const response = await fetch(`${API_BASE_URL}${ticketId}`, {
+    const response = await fetch(`${API_BASE_URL}/tickets/${ticketId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -173,5 +172,5 @@ async function handleDeleteBooking(ticketId) {
 }
 
 function redirectToFeedback(eventId) {
-  window.location.href = `feedback.html?eventId=${eventId}`;
+  window.location.href = `doFeedback.html?eventId=${eventId}`;
 }

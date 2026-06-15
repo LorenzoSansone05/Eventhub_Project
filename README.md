@@ -1,4 +1,24 @@
-EventHub
+EventHub:
+
+
+
+EventHub è una piattaforma backend e frontend per la gestione completa di eventi. L'applicazione permette a diversi tipi di utenti di interagire con il sistema in base al proprio ruolo:
+
+
+
+L'utente non loggato (GUEST) puo solo vedere gli eventi, ma non prenotarsi a differenza dell'utente base.
+
+
+
+Gli Utenti Standard (USER) possono consultare il catalogo degli eventi filtrandoli per data, tag, organizer email o location, prenotare biglietti (Standard o VIP), gestire le proprie prenotazioni e lasciare recensioni e punteggi (feedback) per gli eventi passati.
+
+
+
+Gli Organizzatori (ORGANIZER) possono inserire nuovi eventi nel sistema, modificarli, cancellarli, visualizzare la lista dei partecipanti che hanno prenotato un biglietto per i loro eventi e visualizzare le recensioni di ognio singolo evento creato dal singolo organizer
+
+
+
+Gli Amministratori (ADMIN) hanno il controllo totale sul sistema: gestiscono i ruoli degli utenti, possono applicare ban in caso di violazioni, moderano i feedback e gestiscono le anagrafiche dei tag, dei relatori (speaker) e delle location (venues).
 
 
 
@@ -27,7 +47,8 @@ Java 17+, Maven, Docker, Git, Postman.
 
 
 
-Configurazione database PostgreSQL: (CREDENZIALI FILE .env) 
+
+Configurazione database PostgreSQL: (CREDENZIALI FILE .env)
 
 services:
 
@@ -102,11 +123,12 @@ volumes:
 Istruzioni di avvio dell'app:
 
 
+
 1. Clonare il repository: git clone https://github.com/LorenzoSansone05/Eventhub\_Project.git, cd Eventhub\_Project
 
 
 
-2\. Avviare il server PostgreSQL: docker compose up -d 
+2\. Avviare il server PostgreSQL: docker compose up -d
 
 
 
@@ -119,6 +141,27 @@ Istruzioni di avvio dell'app:
 5\. Accedere alla documentazione per avere chiare le idee sull'app: http://localhost:8080/swagger-ui.html
 
 6. Quando si vuole chiudere l'app bisogna anche fermare il servizio docker: docker-compose down
+
+
+
+
+Screenshot dell'app:
+
+!\[Schermata Login](eventhub/docs/screenshots/EventHub\_Login.png)
+
+!\[Gestione Venues(ADMIN)](eventhub/docs/screenshots/Admin\_Venues.png)
+
+
+
+!\[Gestione evento(ORGANIZER)](eventhub/docs/screenshots/Organizer\_Events.png)
+
+!\[Ricerca eventi(USER, GUEST)](eventhub/docs/screenshots/Search\_Events.png)
+
+
+
+!\[Documentazione Swagger](eventhub/docs/screenshots/Swagger\_Documentation.png)
+
+
 
 
 

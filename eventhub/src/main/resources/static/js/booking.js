@@ -17,7 +17,16 @@ document.addEventListener("DOMContentLoaded", function () {
   function loadEventFields(id) {
     var url = "http://localhost:8080/api/events/" + id;
 
-    fetch(url)
+    var token = localStorage.getItem('EventHubToken') || sessionStorage.getItem('EventHubToken');
+    var headers = { "Content-Type": "application/json" };
+    if (token) {
+      headers["Authorization"] = "Bearer " + token;
+    }
+
+    fetch(url, {
+        method: "GET",
+        headers: headers 
+    })
       .then(function (response) {
         return response.json();
       })
@@ -58,11 +67,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var postUrl = "http://localhost:8080/api/tickets/events/" + eventId + "/book";
 
+    var token = localStorage.getItem('EventHubToken') || sessionStorage.getItem('EventHubToken');
+
+    var postHeaders = {
+      "Content-Type": "application/json"
+    };
+
+    if (token) {
+      postHeaders["Authorization"] = "Bearer " + token;
+    } else {
+      alert("Errore: Devi prima effettuare l'accesso.");
+      window.location.href = "login.html";
+      return;
+    }
+
     fetch(postUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: postHeaders,
       body: JSON.stringify(bookingData)
     })
     .then(function (response) {
@@ -70,8 +91,10 @@ document.addEventListener("DOMContentLoaded", function () {
         alert("Biglietto prenotato con successo!");
         window.location.href = "events.html"; 
       } else if (response.status === 401) {
-        alert("Errore: Devi prima effettuare l'accesso (Richiede autenticazione).");
+        alert("Errore: Sessione scaduta o non valida. Effettua di nuovo l'accesso.");
         window.location.href = "login.html";
+      } else if (response.status === 403) {
+        alert("Errore 403: Non hai i permessi per prenotare questo evento (es. sei un organizzatore o admin).");
       } else if (response.status === 404) {
         alert("Errore: L'evento specificato non esiste nel sistema.");
       } else if (response.status === 409) {

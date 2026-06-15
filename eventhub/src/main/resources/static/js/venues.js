@@ -6,6 +6,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     loadAllVenues();
 
+    function getHeaders() {
+        var token = localStorage.getItem('EventHubToken') || sessionStorage.getItem('EventHubToken');
+        var headers = {
+            'Content-Type': 'application/json'
+        };
+        if (token) {
+            headers['Authorization'] = 'Bearer ' + token;
+        }
+        return headers;
+    }
+
     if (createForm) {
         createForm.addEventListener('submit', function(event) {
             event.preventDefault();
@@ -72,83 +83,84 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function loadAllVenues() {
-        fetch(BASE_URL)
-            .then(function(response) {
-                if (!response.ok) throw new Error("Errore nel caricamento delle location");
-                return response.json();
-            })
-            .then(function(venues) {
-                container.innerHTML = '';
+        fetch(BASE_URL, {
+            method: 'GET',
+            headers: getHeaders()
+        })
+        .then(function(response) {
+            if (!response.ok) throw new Error("Errore nel caricamento delle location. Status: " + response.status);
+            return response.json();
+        })
+        .then(function(venues) {
+            container.innerHTML = '';
 
-                for (var i = 0; i < venues.length; i++) {
-                    var venue = venues[i];
-                    var venueCard = document.createElement('div');
-                    venueCard.className = 'venue-card';
+            for (var i = 0; i < venues.length; i++) {
+                var venue = venues[i];
+                var venueCard = document.createElement('div');
+                venueCard.className = 'venue-card';
 
-                    venueCard.innerHTML = 
-                        '<span class="venue-id-badge">ID: ' + venue.id + '</span>' +
-                        '<h3>' + venue.name + '</h3>' +
-                        
-                        '' +
-                        '<div class="edit-form-container" style="display: none;">' +
-                            '<h4 class="edit-form-title">Modifica Dettagli Location</h4>' +
-                            '<form class="edit-venue-form">' +
-                                '<div class="venue-details">' +
-                                    '<div class="form-group-venue">' +
-                                        '<label>Nome Location</label>' +
-                                        '<input type="text" value="' + venue.name + '" required />' +
-                                    '</div>' +
-                                    '<div class="form-group-venue">' +
-                                        '<label>Capacità Massima</label>' +
-                                        '<input type="number" value="' + venue.capacity + '" min="10" required />' +
-                                    '</div>' +
-                                    '<div class="form-group-venue">' +
-                                        '<label>Città</label>' +
-                                        '<input type="text" value="' + venue.city + '" required />' +
-                                    '</div>' +
-                                    '<div class="form-group-venue">' +
-                                        '<label>Indirizzo</label>' +
-                                        '<input type="text" value="' + venue.address + '" required />' +
-                                    '</div>' +
+                venueCard.innerHTML = 
+                    '<span class="venue-id-badge">ID: ' + venue.id + '</span>' +
+                    '<h3>' + venue.name + '</h3>' +
+                    
+                    '<div class="edit-form-container" style="display: none;">' +
+                        '<h4 class="edit-form-title">Modifica Dettagli Location</h4>' +
+                        '<form class="edit-venue-form">' +
+                            '<div class="venue-details">' +
+                                '<div class="form-group-venue">' +
+                                    '<label>Nome Location</label>' +
+                                    '<input type="text" value="' + venue.name + '" required />' +
                                 '</div>' +
-                                '<div class="form-actions">' +
-                                    '<button type="button" class="btn-cancel">Annulla</button>' +
-                                    '<button type="submit" class="btn-update">Aggiorna</button>' +
+                                '<div class="form-group-venue">' +
+                                    '<label>Capacità Massima</label>' +
+                                    '<input type="number" value="' + venue.capacity + '" min="10" required />' +
                                 '</div>' +
-                            '</form>' +
-                        '</div>' +
+                                '<div class="form-group-venue">' +
+                                    '<label>Città</label>' +
+                                    '<input type="text" value="' + venue.city + '" required />' +
+                                '</div>' +
+                                '<div class="form-group-venue">' +
+                                    '<label>Indirizzo</label>' +
+                                    '<input type="text" value="' + venue.address + '" required />' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="form-actions">' +
+                                '<button type="button" class="btn-cancel">Annulla</button>' +
+                                '<button type="submit" class="btn-update">Aggiorna</button>' +
+                            '</div>' +
+                        '</form>' +
+                    '</div>' +
 
-                        '' +
-                        '<div class="venue-details">' +
-                            '<div class="detail-item"><span>Città :</span> ' + venue.city + '</div>' +
-                            '<div class="detail-item"><span>Capienza :</span> ' + venue.capacity.toLocaleString('it-IT') + ' persone</div>' +
-                            '<div class="detail-item"><span>Indirizzo :</span> ' + venue.address + '</div>' +
-                        '</div>' +
-                        '<div class="admin-actions">' +
-                            '<button class="btn-edit">Modifica Location</button>' +
-                            '<button class="btn-delete">Elimina</button>' +
-                        '</div>';
+                    '<div class="venue-details">' +
+                        '<div class="detail-item"><span>Città :</span> ' + venue.city + '</div>' +
+                        '<div class="detail-item"><span>Capienza :</span> ' + venue.capacity.toLocaleString('it-IT') + ' persone</div>' +
+                        '<div class="detail-item"><span>Indirizzo :</span> ' + venue.address + '</div>' +
+                    '</div>' +
+                    '<div class="admin-actions">' +
+                        '<button class="btn-edit">Modifica Location</button>' +
+                        '<button class="btn-delete">Elimina</button>' +
+                    '</div>';
 
-                    container.appendChild(venueCard);
-                }
-            })
-            .catch(function(error) {
-                console.error("Error:", error);
-                container.innerHTML = '<p style="color: white; padding: 20px;">Errore durante il caricamento delle location.</p>';
-            });
+                container.appendChild(venueCard);
+            }
+        })
+        .catch(function(error) {
+            console.error("Error:", error);
+            container.innerHTML = '<p style="color: white; padding: 20px;">Errore durante il caricamento delle location.</p>';
+        });
     }
 
     function createVenue(venueData) {
         fetch(BASE_URL, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getHeaders(),
             body: JSON.stringify(venueData)
         })
         .then(function(response) {
             if (response.status === 201 || response.ok) {
                 return response.json();
             } else {
-                throw new Error("Errore durante la creazione della location");
+                throw new Error("Errore durante la creazione della location. Status: " + response.status);
             }
         })
         .then(function(newVenue) {
@@ -165,11 +177,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateVenue(id, updatedData, card) {
         fetch(BASE_URL + '/' + id, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getHeaders(),
             body: JSON.stringify(updatedData)
         })
         .then(function(response) {
-            if (!response.ok) throw new Error("Aggiornamento fallito");
+            if (!response.ok) throw new Error("Aggiornamento fallito. Status: " + response.status);
             return response.json();
         })
         .then(function(updatedVenue) {
@@ -187,19 +199,20 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!confirmDelete) return;
 
         fetch(BASE_URL + '/' + id, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: getHeaders()
         })
         .then(function(response) {
             if (response.status === 204 || response.ok) {
                 alert("Location eliminata con successo.");
                 card.remove();
             } else {
-                throw new Error("Delete failed");
+                throw new Error("Delete failed. Status: " + response.status);
             }
         })
         .catch(function(error) {
             console.error("Error:", error);
-            alert("Errore durante l'eliminazione. La location potrebbe non esistere più.");
+            alert("Errore durante l'eliminazione. La location potrebbe non esistere più o essere legata a degli eventi attivi.");
         });
     }
 });

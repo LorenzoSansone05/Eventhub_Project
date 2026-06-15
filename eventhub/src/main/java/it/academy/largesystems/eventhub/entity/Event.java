@@ -54,6 +54,9 @@ public class Event {
     @OneToMany(mappedBy = "event", cascade = CascadeType.REMOVE)
     private List<Feedback> feedbacks;
 
+    @OneToMany(mappedBy = "event", cascade = CascadeType.REMOVE)
+    private List<Ticket> tickets;
+
     @NotNull(message = "La struttura (venue) è obbligatoria.")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "venue_id", nullable = false)

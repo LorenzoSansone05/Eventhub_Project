@@ -25,10 +25,11 @@ public class Profile {
     @Size(max = 60, message = "Il cognome non può superare i 60 caratteri.")
     private String surname;
 
+    @Lob
     private String photoUrl;
 
     @Past(message = "La data di nascita deve essere nel passato.")
-    private LocalDate birth_date;
+    private LocalDate birthDate;
 
     @Size(max = 100, message = "La città non può superare i 100 caratteri.")
     private String city;

@@ -42,8 +42,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(java.util.List.of("http://127.0.0.1:5500", "http://localhost:5500"));
-                    config.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                    config.setAllowedHeaders(java.util.List.of("Authorization", "Content-Type"));
+                    config.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+                    config.setAllowedHeaders(java.util.List.of("*"));
                     config.setAllowCredentials(true);
                     return config;
                 }))
@@ -53,37 +53,39 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
-
                         .requestMatchers("/api/auth/**").permitAll()
+
+                        .requestMatchers("/api/profiles/me/**").authenticated()
+                        .requestMatchers("/api/users/me/**").authenticated()
+
                         .requestMatchers(HttpMethod.GET, "/api/events").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/events/{id}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/events/*/rating").permitAll()
-
-                        .requestMatchers("/api/profiles/me").authenticated()
-                        .requestMatchers("/api/users/me/**").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/api/tags").authenticated()
-
-                        .requestMatchers(HttpMethod.POST, "/api/feedbacks").hasRole("USER")
-                        .requestMatchers("/api/tickets/**").hasRole("USER")
-
+                        .requestMatchers(HttpMethod.GET, "/api/events/{id}/participants").hasRole("ORGANIZER")
                         .requestMatchers(HttpMethod.POST, "/api/events").hasRole("ORGANIZER")
                         .requestMatchers(HttpMethod.PUT, "/api/events/*").hasRole("ORGANIZER")
                         .requestMatchers(HttpMethod.DELETE, "/api/events/*").hasRole("ORGANIZER")
 
                         .requestMatchers(HttpMethod.GET, "/api/speakers").hasAnyRole("ORGANIZER", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/venues").hasAnyRole("ORGANIZER", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/venues/*").hasAnyRole("ORGANIZER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/speakers/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/speakers/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/speakers/**").hasRole("ADMIN")
 
+                        .requestMatchers(HttpMethod.GET, "/api/venues/**").hasAnyRole("ORGANIZER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/venues/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/venues/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/venues/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/api/tags").hasAnyRole("ORGANIZER", "ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/api/tags/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/tags/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/tags/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.POST, "/api/feedbacks").hasRole("USER")
                         .requestMatchers(HttpMethod.PUT, "/api/feedbacks/*").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/feedbacks/*").hasRole("ADMIN")
-
-                        .requestMatchers("/api/speakers/**").hasRole("ADMIN")
-                        .requestMatchers("/api/tags/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/venues").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/venues/*").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/venues/*").hasRole("ADMIN")
+                        .requestMatchers("/api/tickets/**").hasRole("USER")
 
                         .requestMatchers("/api/users/by-email/*").hasRole("ADMIN")
                         .requestMatchers("/api/users/**").hasRole("ADMIN")
@@ -110,13 +112,16 @@ public class SecurityConfig {
                 """);
         // RUOLO
         manager.setAuthoritiesByUsernameQuery("""
-                    SELECT 
-                        u."email" AS username,
-                        r."name" AS authority
-                    FROM "User" u
-                    JOIN "Role" r ON u."role_id" = r."id"
-                    WHERE u."email" = ?
-                """);
+            SELECT 
+                u."email" AS username,
+                CASE 
+                    WHEN r."name" LIKE 'ROLE_%' THEN r."name"
+                    ELSE CONCAT('ROLE_', r."name")
+                END AS authority
+            FROM "User" u
+            JOIN "Role" r ON u."role_id" = r."id"
+            WHERE u."email" = ?
+        """);
 
         return manager;
     }

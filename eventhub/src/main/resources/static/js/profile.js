@@ -102,6 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(function(updatedProfile) {
                 alert('Profilo salvato con successo!');
+                window.location.href = "index.html";
             })
             .catch(function(error) {
                 console.error('Save failed:', error);

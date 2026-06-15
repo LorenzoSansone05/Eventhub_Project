@@ -1,7 +1,9 @@
 package it.academy.largesystems.eventhub.controller;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import it.academy.largesystems.eventhub.dto.EventCreateRequestDTO;
 import it.academy.largesystems.eventhub.dto.EventResponseDTO;
+import it.academy.largesystems.eventhub.dto.ParticipantResponseDTO;
 import it.academy.largesystems.eventhub.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/events")
@@ -25,6 +28,24 @@ import java.time.LocalDate;
 public class EventController {
 
     private final EventService eventService;
+
+    // ORGANIZER
+    @GetMapping("/{id}/participants")
+    @Operation(
+            summary = "Recupera i partecipanti di un evento (Richiede ruolo ORGANIZER)",
+            description = "Restituisce la lista degli utenti che hanno acquistato o prenotato un biglietto per l'evento specificato."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista partecipanti recuperata correttamente"),
+            @ApiResponse(responseCode = "401", description = "Utente non autenticato"),
+            @ApiResponse(responseCode = "403", description = "L'utente corrente non ha i permessi per questo evento"),
+            @ApiResponse(responseCode = "404", description = "Evento non trovato")
+    })
+    public ResponseEntity<List<ParticipantResponseDTO>> getEventParticipants(
+            @PathVariable("id") @Parameter(description = "ID dell'evento di cui recuperare i partecipanti", example = "1") Long eventId) {
+
+        return ResponseEntity.ok(eventService.getParticipantsByEvent(eventId));
+    }
 
     // TUTTI
     @GetMapping

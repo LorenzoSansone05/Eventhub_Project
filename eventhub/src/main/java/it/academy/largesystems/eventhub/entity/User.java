@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
@@ -33,13 +34,15 @@ public class User implements UserDetails {
 
     private Instant createdAt;
     private Instant updatedAt;
-    private boolean isBanned;
+
+    @Column(nullable = false)
+    private boolean isBanned = false;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id") // FK
     private Role role;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Profile profile;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
@@ -66,7 +69,7 @@ public class User implements UserDetails {
         if (this.role == null) {
             return List.of();
         }
-        return List.of(() -> this.role.getName());
+        return List.of(new SimpleGrantedAuthority("ROLE_" + this.role.getName()));
     }
 
     @Override

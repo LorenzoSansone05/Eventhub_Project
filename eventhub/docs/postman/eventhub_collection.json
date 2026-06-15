@@ -1,0 +1,1142 @@
+{
+    "info": {
+        "_postman_id": "eventhub-api-collection-2026",
+        "name": "EventHub API",
+        "description": "Collezione completa per il testing del backend EventHub, strutturata in base ai controller e alla SecurityConfig.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "1. Autenticazione",
+            "description": "Endpoint pubblici per la gestione di accessi e registrazioni.",
+            "item": [
+                {
+                    "name": "Registrazione (Signup)",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"utente@example.com\",\n  \"password\": \"Secret123!\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/auth/signup",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "auth",
+                                "signup"
+                            ]
+                        },
+                        "description": "Crea un account standard con ruolo ROLE_USER."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 200) {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    if (jsonData.token) {",
+                                    "        pm.collectionVariables.set(\"jwtToken\", jsonData.token);",
+                                    "        console.log(\"Token salvato: \" + jsonData.token);",
+                                    "    }",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"utente@example.com\",\n  \"password\": \"Secret123!\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/auth/login",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "auth",
+                                "login"
+                            ]
+                        },
+                        "description": "In caso di successo salva automaticamente il token JWT nella variabile della collezione."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "2. Profilo Personale",
+            "description": "Endpoint legati all'utente autenticato ricavato dal contesto di sicurezza.",
+            "item": [
+                {
+                    "name": "Recupera Profilo Personale",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/profiles/me",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "profiles",
+                                "me"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Aggiorna Dati Profilo",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Mario\",\n  \"surname\": \"Rossi\",\n  \"photoUrl\": \"foto.png\",\n  \"birthDate\": \"1995-04-23\",\n  \"city\": \"Napoli\",\n  \"description\": \"Sviluppatore software appassionato di eventi tech.\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/profiles/me",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "profiles",
+                                "me"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "3. Eventi",
+            "description": "Gestione del catalogo eventi, filtri e partecipanti.",
+            "item": [
+                {
+                    "name": "Recupera Eventi (Filtrati e Paginati)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/events?date=2026-09-20&tag=Programmazione&venueName=Alcatraz&organizerName=manager@eventhub.it&page=0&size=10&sort=eventDate,asc",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "events"
+                            ],
+                            "query": [
+                                {
+                                    "key": "date",
+                                    "value": "2026-09-20",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "tag",
+                                    "value": "Programmazione",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "venueName",
+                                    "value": "Alcatraz",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "organizerName",
+                                    "value": "manager@eventhub.it",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "0"
+                                },
+                                {
+                                    "key": "size",
+                                    "value": "10"
+                                },
+                                {
+                                    "key": "sort",
+                                    "value": "eventDate,asc",
+                                    "disabled": true
+                                }
+                            ]
+                        },
+                        "description": "Endpoint pubblico. Supporta paginazione Spring Data (page, size, sort)."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Recupera Evento per ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/events/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "events",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Recupera Media Feedback Evento",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/events/1/rating",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "events",
+                                "1",
+                                "rating"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Recupera Partecipanti Evento",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/events/1/participants",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "events",
+                                "1",
+                                "participants"
+                            ]
+                        },
+                        "description": "Richiede ruolo ORGANIZER."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Crea Evento",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Java Academy Conference 2026\",\n  \"eventDate\": \"2026-09-20\",\n  \"startTime\": \"09:30:00\",\n  \"endTime\": \"18:00:00\",\n  \"priceStandard\": 49.99,\n  \"priceVip\": 99.99,\n  \"venueId\": 4,\n  \"tagIds\": [1, 3],\n  \"speakerIds\": [12, 15]\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/events",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "events"
+                            ]
+                        },
+                        "description": "Richiede ruolo ORGANIZER."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Modifica Evento",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Java Academy Conference 2026 (Aggiornato)\",\n  \"eventDate\": \"2026-09-20\",\n  \"startTime\": \"10:00:00\",\n  \"endTime\": \"18:30:00\",\n  \"priceStandard\": 55.00,\n  \"priceVip\": 110.00,\n  \"venueId\": 4,\n  \"tagIds\": [1, 3, 5],\n  \"speakerIds\": [12]\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/events/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "events",
+                                "1"
+                            ]
+                        },
+                        "description": "Richiede ruolo ORGANIZER (proprietario dell'evento)."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Elimina Evento",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/events/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "events",
+                                "1"
+                            ]
+                        },
+                        "description": "Richiede ruolo ORGANIZER."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "4. Biglietti",
+            "description": "Prenotazione e disdetta biglietti (Ruolo USER).",
+            "item": [
+                {
+                    "name": "Recupera i Miei Biglietti",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/tickets",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "tickets"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Prenota Biglietto per Evento",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"type\": \"STANDARD\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/tickets/events/1/book",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "tickets",
+                                "events",
+                                "1",
+                                "book"
+                            ]
+                        },
+                        "description": "Accetta nel body la tipologia: 'STANDARD' o 'VIP'."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Disdici Prenotazione Biglietto",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/tickets/42",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "tickets",
+                                "42"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "5. Feedback",
+            "description": "Inserimento recensioni (USER) e moderazione (ADMIN).",
+            "item": [
+                {
+                    "name": "Recupera Tutti i Feedback",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/feedbacks",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "feedbacks"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Recupera Feedback per Evento",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/feedbacks/event/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "feedbacks",
+                                "event",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Inserisci Feedback",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"rating\": 5,\n  \"feedbackText\": \"Evento organizzato molto bene, speaker molto preparati.\",\n  \"eventId\": 1\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/feedbacks",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "feedbacks"
+                            ]
+                        },
+                        "description": "Richiede ruolo USER."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Modifica Feedback",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"rating\": 4,\n  \"feedbackText\": \"Commento moderato dall'amministratore.\",\n  \"eventId\": 1\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/feedbacks/10",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "feedbacks",
+                                "10"
+                            ]
+                        },
+                        "description": "Richiede ruolo ADMIN."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Elimina Feedback",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/feedbacks/10",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "feedbacks",
+                                "10"
+                            ]
+                        },
+                        "description": "Richiede ruolo ADMIN."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "6. User Management (Admin / Self)",
+            "description": "Operazioni di gestione utenza generali, cambi password ed email e ban.",
+            "item": [
+                {
+                    "name": "Recupera Tutti gli Utenti",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users"
+                            ]
+                        },
+                        "description": "Richiede ruolo ADMIN."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Recupera Utente per ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "1"
+                            ]
+                        },
+                        "description": "Richiede ruolo ADMIN."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Recupera Utente per Email",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/by-email/utente@example.com",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "by-email",
+                                "utente@example.com"
+                            ]
+                        },
+                        "description": "Richiede ruolo ADMIN."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Aggiorna la Mia Email",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 200) {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    if (jsonData.token) {",
+                                    "        pm.collectionVariables.set(\"jwtToken\", jsonData.token);",
+                                    "        console.log(\"Nuovo token registrato dopo cambio email\");",
+                                    "    }",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PATCH",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"newEmail\": \"nuovo.utente@example.com\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/me/email",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "me",
+                                "email"
+                            ]
+                        },
+                        "description": "Aggiorna l'email dell'utente corrente e rigenera il token."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Aggiorna la Mia Password",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 200) {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    if (jsonData.token) {",
+                                    "        pm.collectionVariables.set(\"jwtToken\", jsonData.token);",
+                                    "        console.log(\"Nuovo token registrato dopo cambio password\");",
+                                    "    }",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PATCH",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"oldPassword\": \"VecchiaPassword123!\",\n  \"newPassword\": \"NuovaPassword456!\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/me/password",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "me",
+                                "password"
+                            ]
+                        },
+                        "description": "Aggiorna la password corrente e rigenera il token."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Aggiorna Ruolo Utente",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"newRole\": \"MANAGER\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/1/role",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "1",
+                                "role"
+                            ]
+                        },
+                        "description": "Richiede ruolo ADMIN."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Aggiorna Stato Ban Utente",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/1/ban?banned=true",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "1",
+                                "ban"
+                            ],
+                            "query": [
+                                {
+                                    "key": "banned",
+                                    "value": "true",
+                                    "description": "true per bannare, false per sbannare"
+                                }
+                            ]
+                        },
+                        "description": "Richiede ruolo ADMIN. L'admin non può autobannarsi."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Elimina Utente",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "1"
+                            ]
+                        },
+                        "description": "Richiede ruolo ADMIN."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "7. Speaker",
+            "description": "Gestione dell'anagrafica relatori (ORGANIZER/ADMIN).",
+            "item": [
+                {
+                    "name": "Recupera Tutti i Relatori",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/speakers",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "speakers"
+                            ]
+                        },
+                        "description": "Accessibile a ORGANIZER e ADMIN."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Recupera Speaker per ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/speakers/12",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "speakers",
+                                "12"
+                            ]
+                        },
+                        "description": "Richiede ruolo ADMIN."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Crea Speaker",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Jane\",\n  \"surname\": \"Doe\",\n  \"bio\": \"Esperta internazionale di architetture a microservizi e Cloud Native computing.\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/speakers",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "speakers"
+                            ]
+                        },
+                        "description": "Richiede ruolo ADMIN."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Modifica Speaker",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Jane\",\n  \"surname\": \"Doe\",\n  \"bio\": \"Biografia modificata con nuove pubblicazioni.\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/speakers/12",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "speakers",
+                                "12"
+                            ]
+                        },
+                        "description": "Richiede ruolo ADMIN."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Elimina Speaker",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/speakers/12",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "speakers",
+                                "12"
+                            ]
+                        },
+                        "description": "Richiede ruolo ADMIN."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "8. Location (Venues)",
+            "description": "Gestione delle strutture ospitanti degli eventi.",
+            "item": [
+                {
+                    "name": "Recupera Tutte le Location",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/venues",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "venues"
+                            ]
+                        },
+                        "description": "Accessibile a ORGANIZER e ADMIN."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Recupera Location per ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/venues/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "venues",
+                                "1"
+                            ]
+                        },
+                        "description": "Richiede ruolo ADMIN."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Crea Location",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Alcatraz\",\n  \"capacity\": 3000,\n  \"address\": \"Via Valtellina 25\",\n  \"city\": \"Milano\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/venues",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "venues"
+                            ]
+                        },
+                        "description": "Richiede ruolo ADMIN."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Modifica Location",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Alcatraz (Aggiornato)\",\n  \"capacity\": 3500,\n  \"address\": \"Via Valtellina 25\",\n  \"city\": \"Milano\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/venues/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "venues",
+                                "1"
+                            ]
+                        },
+                        "description": "Richiede ruolo ADMIN."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Elimina Location",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/venues/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "venues",
+                                "1"
+                            ]
+                        },
+                        "description": "Richiede ruolo ADMIN."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "9. Tag",
+            "description": "Gestione delle etichette per la categorizzazione degli eventi.",
+            "item": [
+                {
+                    "name": "Recupera Tutti i Tag",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/tags",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "tags"
+                            ]
+                        },
+                        "description": "Accessibile a USER, ORGANIZER, ADMIN."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Crea Tag",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Programmazione\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/tags",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "tags"
+                            ]
+                        },
+                        "description": "Richiede ruolo ADMIN."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Modifica Tag",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Backend Tech\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/tags/3",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "tags",
+                                "3"
+                            ]
+                        },
+                        "description": "Richiede ruolo ADMIN."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Elimina Tag",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/tags/3",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "tags",
+                                "3"
+                            ]
+                        },
+                        "description": "Richiede ruolo ADMIN."
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "token",
+                "value": "{{jwtToken}}",
+                "type": "string"
+            }
+        ]
+    },
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:8080",
+            "type": "string"
+        },
+        {
+            "key": "jwtToken",
+            "value": "",
+            "type": "string"
+        }
+    ]
+}
