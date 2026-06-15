@@ -149,23 +149,31 @@ Screenshot dell'app:
 
 
 
+Schermata di Login:
+
 !\[Schermata Login](eventhub/docs/screenshots/EventHub\_Login.png)
 
 
+
+Gestione Venues (ADMIN):
 
 !\[Gestione Venues ADMIN](eventhub/docs/screenshots/Admin\_Venues.png)
 
 
 
+Gestione Evento (ORGANIZER):
+
 !\[Gestione evento ORGANIZER](eventhub/docs/screenshots/Organizer\_Events.png)
 
 
+
+Ricerca Eventi (USER, GUEST):
 
 !\[Ricerca eventi USER GUEST](eventhub/docs/screenshots/Search\_Events.png)
 
 
 
+Documentazione delle API (Swagger):
+
 !\[Documentazione Swagger](eventhub/docs/screenshots/Swagger\_Documentation.png)
-
-
 
