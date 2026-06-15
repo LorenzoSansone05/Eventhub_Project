@@ -124,7 +124,7 @@ Istruzioni di avvio dell'app:
 
 
 
-1. Clonare il repository: git clone https://github.com/LorenzoSansone05/Eventhub\_Project.git, cd Eventhub\_Project
+1. Clonare il repository: git clone https://github.com/LorenzoSansone05/Eventhub\_Project.git , cd Eventhub\_Project
 
 
 
@@ -149,13 +149,17 @@ Screenshot dell'app:
 
 !\[Schermata Login](eventhub/docs/screenshots/EventHub\_Login.png)
 
-!\[Gestione Venues(ADMIN)](eventhub/docs/screenshots/Admin\_Venues.png)
+
+
+!\[Gestione Venues ADMIN](eventhub/docs/screenshots/Admin\_Venues.png)
 
 
 
-!\[Gestione evento(ORGANIZER)](eventhub/docs/screenshots/Organizer\_Events.png)
+!\[Gestione evento ORGANIZER](eventhub/docs/screenshots/Organizer\_Events.png)
 
-!\[Ricerca eventi(USER, GUEST)](eventhub/docs/screenshots/Search\_Events.png)
+
+
+!\[Ricerca eventi USER GUEST](eventhub/docs/screenshots/Search\_Events.png)
 
 
 
